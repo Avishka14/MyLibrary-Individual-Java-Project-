@@ -20,12 +20,11 @@ public class Dashboard extends javax.swing.JFrame {
         initComponents();
         jPanel5.setVisible(false);
         jPanel10.setVisible(false);
-        jPanel6.setVisible(true);
-        
+        jPanel6.setVisible(true);       
         employeeName = empName;
-        jLabel15.setText(employeeName);
-        
+        jLabel15.setText(employeeName);     
         loadBookCategories();
+        loadLocation();
     }
     
     private void loadBookCategories(){
@@ -48,6 +47,43 @@ public class Dashboard extends javax.swing.JFrame {
             
         } catch (Exception e) {
          e.printStackTrace();
+        }
+        
+    }
+    
+    private void loadLocation(){
+        
+        try {
+            
+            Vector<String> section = new Vector<>();
+            section.add("Select");
+            
+            ResultSet sectionResults = MySQL.exeSearch("SELECT * FROM `section`");
+           
+            while(sectionResults.next()){
+            
+                section.add(String.valueOf(sectionResults.getString("Section")));                
+                DefaultComboBoxModel sectionModel = new DefaultComboBoxModel(section);
+                jComboBox3.setModel(sectionModel);
+                
+            }
+            
+            Vector<String> cupboard = new Vector<>();
+            cupboard.add("Select");
+            
+            ResultSet cupboardResults = MySQL.exeSearch("SELECT * FROM `location`");
+            
+            while(cupboardResults.next()){
+                
+                cupboard.add(String.valueOf(cupboardResults.getString("Cupboard")));
+                
+                DefaultComboBoxModel cupModel = new DefaultComboBoxModel(cupboard);
+                jComboBox4.setModel(cupModel);
+            }
+            
+            
+        } catch (Exception e) {
+        e.printStackTrace();
         }
         
     }
