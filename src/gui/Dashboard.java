@@ -1,6 +1,12 @@
 
 package gui;
 
+import java.sql.ResultSet;
+import java.util.Vector;
+import javax.swing.DefaultComboBoxModel;
+import model.MySQL;
+
+
 /**
  *
  * @author Avishka
@@ -18,6 +24,32 @@ public class Dashboard extends javax.swing.JFrame {
         
         employeeName = empName;
         jLabel15.setText(employeeName);
+        
+        loadBookCategories();
+    }
+    
+    private void loadBookCategories(){
+        
+        try {
+        
+            ResultSet ResultCat = MySQL.exeSearch("SELECT * FROM `bookcat`");
+            
+              Vector<String> vector = new Vector<>();
+              vector.add("Select");
+              
+            while(ResultCat.next()){
+           
+                vector.add(String.valueOf(ResultCat.getString("CatName")));
+                
+                DefaultComboBoxModel model = new DefaultComboBoxModel(vector);
+                jComboBox2.setModel(model);
+          
+            }
+            
+        } catch (Exception e) {
+         e.printStackTrace();
+        }
+        
     }
     
    
