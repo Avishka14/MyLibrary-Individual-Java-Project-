@@ -18,6 +18,12 @@ public class LogIn extends javax.swing.JFrame {
         return empName ;
     }
     
+    public static String empNic;
+    
+    public static String returnEmployeeEmail(String empNic){
+        return empNic;
+    }
+    
    
     public LogIn() {
         initComponents();
@@ -373,8 +379,9 @@ public class LogIn extends javax.swing.JFrame {
                 if(openView){
                 
                     empName = String.valueOf(resultSet.getString("Name"));
+                    empNic = String.valueOf(resultSet.getString("NIC"));
                     
-                    Dashboard db = new Dashboard(empName);
+                    Dashboard db = new Dashboard(empName,empNic);
                     db.setVisible(true);
                     this.dispose();   
                     

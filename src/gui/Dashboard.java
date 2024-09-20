@@ -1,95 +1,131 @@
-
 package gui;
 
 import java.sql.ResultSet;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Random;
 import java.util.Vector;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JOptionPane;
 import model.MySQL;
-
 
 /**
  *
  * @author Avishka
  */
 public class Dashboard extends javax.swing.JFrame {
-    
-    public static String employeeName;
 
-    
-    public Dashboard(String empName) {
+    HashMap<String, Integer> catMap = new HashMap<>();
+
+    public static String employeeName;
+    public static String employeeNic;
+
+    public Dashboard(String empName, String empNic) {
         initComponents();
         jPanel5.setVisible(false);
         jPanel10.setVisible(false);
-        jPanel6.setVisible(true);       
+        jPanel6.setVisible(true);
         employeeName = empName;
-        jLabel15.setText(employeeName);     
+        employeeNic = empNic;
+        jLabel15.setText(employeeName);
         loadBookCategories();
         loadLocation();
+        jButton16.setEnabled(false);
+        jButton17.setEnabled(false);
+        jButton18.setEnabled(false);
     }
-    
-    private void loadBookCategories(){
-        
+
+    private void loadBookCategories() {
+
         try {
-        
+
             ResultSet ResultCat = MySQL.exeSearch("SELECT * FROM `bookcat`");
-            
-              Vector<String> vector = new Vector<>();
-              vector.add("Select");
-              
-            while(ResultCat.next()){
-           
-                vector.add(String.valueOf(ResultCat.getString("CatName")));
-                
+
+            Vector<String> vector = new Vector<>();
+            vector.add("Select");
+
+            while (ResultCat.next()) {
+
+                vector.add(ResultCat.getString("CatName"));
+                catMap.put(ResultCat.getString("CatName"), ResultCat.getInt("ID"));
+
                 DefaultComboBoxModel model = new DefaultComboBoxModel(vector);
                 jComboBox2.setModel(model);
-          
+
             }
-            
+
         } catch (Exception e) {
-         e.printStackTrace();
+            e.printStackTrace();
         }
-        
+
     }
-    
-    private void loadLocation(){
-        
+
+    private void loadLocation() {
+
         try {
-            
+
             Vector<String> section = new Vector<>();
             section.add("Select");
-            
+
             ResultSet sectionResults = MySQL.exeSearch("SELECT * FROM `section`");
-           
-            while(sectionResults.next()){
-            
-                section.add(String.valueOf(sectionResults.getString("Section")));                
+
+            while (sectionResults.next()) {
+
+                section.add(String.valueOf(sectionResults.getString("Section")));
                 DefaultComboBoxModel sectionModel = new DefaultComboBoxModel(section);
                 jComboBox3.setModel(sectionModel);
-                
+
             }
-            
+
             Vector<String> cupboard = new Vector<>();
             cupboard.add("Select");
-            
+
             ResultSet cupboardResults = MySQL.exeSearch("SELECT * FROM `location`");
-            
-            while(cupboardResults.next()){
-                
+
+            while (cupboardResults.next()) {
+
                 cupboard.add(String.valueOf(cupboardResults.getString("Cupboard")));
-                
+
                 DefaultComboBoxModel cupModel = new DefaultComboBoxModel(cupboard);
                 jComboBox4.setModel(cupModel);
             }
-            
-            
+
         } catch (Exception e) {
-        e.printStackTrace();
+            e.printStackTrace();
         }
-        
+
     }
-    
-   
- 
+
+    public int randomNumber;
+
+    public void randomNumGenerate() {
+        Random random = new Random();
+        randomNumber = random.nextInt(999999);
+
+    }
+
+    public String thisdate;
+
+    public void generateDate() {
+        Date date = new Date();
+        SimpleDateFormat formatdate = new SimpleDateFormat("Y/dd/MM");
+        thisdate = formatdate.format(date);
+    }
+
+    private void clearFields() {
+
+        jButton10.setEnabled(true);
+        jButton28.setEnabled(true);
+        jTextField9.setText("");
+        jTextField10.setText("");
+        jTextField11.setText("");
+        jTextField12.setText("");
+
+        jComboBox2.setSelectedItem("Select");
+
+    }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -151,6 +187,7 @@ public class Dashboard extends javax.swing.JFrame {
         jLabel29 = new javax.swing.JLabel();
         jLabel30 = new javax.swing.JLabel();
         jComboBox5 = new javax.swing.JComboBox<>();
+        jButton28 = new javax.swing.JButton();
         jPanel5 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
@@ -383,26 +420,56 @@ public class Dashboard extends javax.swing.JFrame {
         jTextField11.setFont(new java.awt.Font("Gotham", 0, 14)); // NOI18N
 
         jTextField12.setFont(new java.awt.Font("Gotham", 0, 14)); // NOI18N
+        jTextField12.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jTextField12KeyReleased(evt);
+            }
+        });
 
         jButton10.setText("Generate");
+        jButton10.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton10ActionPerformed(evt);
+            }
+        });
 
         jButton11.setBackground(new java.awt.Color(0, 51, 51));
         jButton11.setFont(new java.awt.Font("Gotham", 0, 14)); // NOI18N
         jButton11.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/add-icon.png"))); // NOI18N
         jButton11.setText("Add");
+        jButton11.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton11ActionPerformed(evt);
+            }
+        });
 
         jButton12.setBackground(new java.awt.Color(0, 51, 102));
         jButton12.setFont(new java.awt.Font("Gotham", 0, 14)); // NOI18N
         jButton12.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/update-icon.png"))); // NOI18N
         jButton12.setText("Update");
+        jButton12.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton12ActionPerformed(evt);
+            }
+        });
 
         jButton13.setBackground(new java.awt.Color(153, 0, 0));
         jButton13.setFont(new java.awt.Font("Gotham", 0, 14)); // NOI18N
         jButton13.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/remove-icon.png"))); // NOI18N
         jButton13.setText("Remove");
+        jButton13.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton13ActionPerformed(evt);
+            }
+        });
 
         jButton14.setFont(new java.awt.Font("Gotham", 0, 14)); // NOI18N
         jButton14.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/clear-icon.png"))); // NOI18N
+        jButton14.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton14ActionPerformed(evt);
+            }
+        });
 
         jLabel22.setFont(new java.awt.Font("Gotham", 0, 14)); // NOI18N
         jLabel22.setText("Book Category");
@@ -423,6 +490,11 @@ public class Dashboard extends javax.swing.JFrame {
 
         jButton15.setFont(new java.awt.Font("Gotham", 0, 14)); // NOI18N
         jButton15.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/search-icon.png"))); // NOI18N
+        jButton15.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton15ActionPerformed(evt);
+            }
+        });
 
         jLabel25.setFont(new java.awt.Font("Gotham", 0, 14)); // NOI18N
         jLabel25.setText("Add Section");
@@ -552,11 +624,11 @@ public class Dashboard extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Section", "Cupboard"
+                "Section", "Cupboard", "Availability"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false
+                false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -596,13 +668,12 @@ public class Dashboard extends javax.swing.JFrame {
             .addGroup(jPanel8Layout.createSequentialGroup()
                 .addGap(19, 19, 19)
                 .addComponent(jLabel27)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTextField14)
-                    .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel28)
-                        .addComponent(jButton19)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel28)
+                    .addComponent(jTextField14)
+                    .addComponent(jButton19))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -671,6 +742,13 @@ public class Dashboard extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
+        jButton28.setText("Today");
+        jButton28.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton28ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
         jPanel6Layout.setHorizontalGroup(
@@ -704,20 +782,23 @@ public class Dashboard extends javax.swing.JFrame {
                             .addGroup(jPanel6Layout.createSequentialGroup()
                                 .addGap(6, 6, 6)
                                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jTextField11, javax.swing.GroupLayout.PREFERRED_SIZE, 231, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(jTextField10, javax.swing.GroupLayout.PREFERRED_SIZE, 233, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(jTextField9, javax.swing.GroupLayout.PREFERRED_SIZE, 236, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addGroup(jPanel6Layout.createSequentialGroup()
-                                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                            .addComponent(jComboBox2, javax.swing.GroupLayout.Alignment.LEADING, 0, 227, Short.MAX_VALUE)
-                                            .addComponent(jTextField12, javax.swing.GroupLayout.Alignment.LEADING))
+                                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                                .addComponent(jComboBox2, javax.swing.GroupLayout.Alignment.LEADING, 0, 227, Short.MAX_VALUE)
+                                                .addComponent(jTextField12, javax.swing.GroupLayout.Alignment.LEADING))
+                                            .addComponent(jTextField11, javax.swing.GroupLayout.PREFERRED_SIZE, 231, javax.swing.GroupLayout.PREFERRED_SIZE))
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jButton10)))))))
+                                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jButton28, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(jButton10))))))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(80, Short.MAX_VALUE))
+                .addContainerGap(28, Short.MAX_VALUE))
         );
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -739,7 +820,9 @@ public class Dashboard extends javax.swing.JFrame {
                         .addGap(6, 6, 6)
                         .addComponent(jLabel20)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jTextField11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jButton28))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel21))
                     .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -1247,31 +1330,285 @@ public class Dashboard extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
-       jPanel5.setVisible(true);
-       jPanel6.setVisible(false);
-       jPanel10.setVisible(false);
+        jPanel5.setVisible(true);
+        jPanel6.setVisible(false);
+        jPanel10.setVisible(false);
     }//GEN-LAST:event_jButton7ActionPerformed
 
     private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
-       jPanel5.setVisible(false);
-       jPanel6.setVisible(true);
-       jPanel10.setVisible(false);
+        jPanel5.setVisible(false);
+        jPanel6.setVisible(true);
+        jPanel10.setVisible(false);
     }//GEN-LAST:event_jButton8ActionPerformed
 
     private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
-            jPanel10.setVisible(true);
-            jPanel5.setVisible(false);
-            jPanel6.setVisible(false);
+        jPanel10.setVisible(true);
+        jPanel5.setVisible(false);
+        jPanel6.setVisible(false);
     }//GEN-LAST:event_jButton9ActionPerformed
 
     private void jButton25ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton25ActionPerformed
-       
-        ActionLib actionlab = new ActionLib(this,true);
+
+        ActionLib actionlab = new ActionLib(this, true);
         actionlab.setVisible(true);
-        
+
     }//GEN-LAST:event_jButton25ActionPerformed
 
-   
+    private void jButton10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton10ActionPerformed
+
+        randomNumGenerate();
+        String stringNumber = String.valueOf(randomNumber);
+        jTextField12.setText(stringNumber);
+
+    }//GEN-LAST:event_jButton10ActionPerformed
+
+    private void jButton11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton11ActionPerformed
+
+        String name = jTextField9.getText();
+        String author = jTextField10.getText();
+        String id = jTextField12.getText();
+        String date = jTextField11.getText();
+       
+        String catgeory = String.valueOf(jComboBox2.getSelectedItem());
+       
+        int nullValue = 0;
+
+        if (name.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Name Is Empty !", "Warning", JOptionPane.WARNING_MESSAGE);
+            jTextField9.grabFocus();
+
+        } else if (author.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Author Is Empty !", "Warning", JOptionPane.WARNING_MESSAGE);
+            jTextField10.grabFocus();
+
+        } else if (catgeory.equals("Select")) {
+            JOptionPane.showMessageDialog(this, "Select the Book Category !", "Warning", JOptionPane.WARNING_MESSAGE);
+            jTextField10.grabFocus();
+
+        } else if (id.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Book ID Is Empty !", "Warning", JOptionPane.WARNING_MESSAGE);
+            jTextField12.grabFocus();
+
+        } else if (!(id.length() == 6)) {
+            JOptionPane.showMessageDialog(this, "Book ID Is Invalid !", "Warning", JOptionPane.WARNING_MESSAGE);
+            jTextField12.grabFocus();
+
+        } else {
+
+            try {
+
+                ResultSet search = MySQL.exeSearch("SELECT * FROM `booklibrary` WHERE `ID`='" + id + "' ");
+
+                if (search.next()) {
+                    JOptionPane.showMessageDialog(this, "Book ID Is Already in Use!", "Warning", JOptionPane.WARNING_MESSAGE);
+                } else {
+                 
+                    int cat = catMap.get(catgeory);
+
+                    MySQL.exeUpdate("INSERT INTO `booklibrary` VALUES ('" + id + "','" + name + "','" + author + "','" + date + "','" + cat + "','" + nullValue + "','" + employeeNic + "')");
+                    JOptionPane.showMessageDialog(this, "Successfully Registered !", "Success", JOptionPane.PLAIN_MESSAGE);
+                    jTextField11.setEditable(true);
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+
+
+    }//GEN-LAST:event_jButton11ActionPerformed
+
+    private void jButton28ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton28ActionPerformed
+        generateDate();
+        String date = thisdate;
+        jTextField11.setText(date);
+        jTextField11.setEditable(false);
+
+    }//GEN-LAST:event_jButton28ActionPerformed
+
+    private void jButton12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton12ActionPerformed
+
+        String bookId = jTextField12.getText();
+
+        if (bookId.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Enter Book ID to Update !", "Warning", JOptionPane.WARNING_MESSAGE);
+            jTextField12.grabFocus();
+        } else {
+
+            try {
+
+                ResultSet bookSearch = MySQL.exeSearch("SELECT * FROM `booklibrary` WHERE `ID`='" + bookId + "' ");
+
+                if (bookSearch.next()) {
+
+                    String name = jTextField9.getText();
+                    String author = jTextField10.getText();
+
+                    String catgeory = String.valueOf(jComboBox2.getSelectedItem());
+                    int cat = catMap.get(catgeory);
+
+                    if (name.isEmpty()) {
+                        JOptionPane.showMessageDialog(this, "Enter Book Name to Update !", "Warning", JOptionPane.WARNING_MESSAGE);
+                        jTextField9.grabFocus();
+
+                    } else if (author.isEmpty()) {
+                        JOptionPane.showMessageDialog(this, "Enter Book Athor to Update !", "Warning", JOptionPane.WARNING_MESSAGE);
+                        jTextField10.grabFocus();
+
+                    } else if (catgeory.equals("Select")) {
+                        JOptionPane.showMessageDialog(this, "Select the Category !", "Warning", JOptionPane.WARNING_MESSAGE);
+
+                    } else {
+
+                        MySQL.exeUpdate(" UPDATE `booklibrary` SET `Name`'='" + name + "', `Author`='" + author + "', `Book_Cat`='" + cat + "' "
+                                + " WHERE `ID`='" + bookId + "' ");
+
+                        jTextField12.setEditable(true);
+                        jTextField11.setEditable(true);
+                        jButton10.setEnabled(true);
+                        jButton28.setEnabled(true);
+
+                        JOptionPane.showMessageDialog(this, "Successfully Updated !", "Success", JOptionPane.PLAIN_MESSAGE);
+                        clearFields();
+
+                    }
+
+                } else {
+                    JOptionPane.showMessageDialog(this, "Invalid Book Id or Book Doesn't Exists !", "Warning", JOptionPane.WARNING_MESSAGE);
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+
+    }//GEN-LAST:event_jButton12ActionPerformed
+
+    private void jTextField12KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField12KeyReleased
+
+        String bookId = jTextField12.getText();
+
+        try {
+
+            ResultSet search = MySQL.exeSearch("SELECT * FROM `booklibrary` INNER JOIN `bookcat`"
+                    + " ON `bookcat`.`ID` = `bookLibrary`.`BookCat_ID`  WHERE `booklibrary`.`ID`='" + bookId + "'");
+
+            if (search.next()) {
+
+                jTextField9.setText(String.valueOf(search.getString("Name")));
+                jTextField10.setText(String.valueOf(search.getString("Author")));
+                jTextField11.setText(String.valueOf(search.getString("Date_Added")));
+
+                String defcat = String.valueOf(search.getString("bookcat.CatName"));
+                jComboBox2.setSelectedItem(defcat);
+                jTextField12.setEditable(false);
+                jTextField11.setEditable(false);
+                jButton10.setEnabled(false);
+                jButton28.setEnabled(false);
+
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }//GEN-LAST:event_jTextField12KeyReleased
+
+    private void jButton13ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton13ActionPerformed
+
+        String bookId = jTextField12.getText();
+
+        if (bookId.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Enter Book ID to Remove !", "Warning", JOptionPane.WARNING_MESSAGE);
+            jTextField12.grabFocus();
+        } else {
+
+            try {
+
+                ResultSet search = MySQL.exeSearch("SELECT * FROM `booklibrary` WHERE `ID`='" + bookId + "'");
+
+                if (search.next()) {
+                    String bookname = String.valueOf(search.getString("Name"));
+                    String author = String.valueOf(search.getString("Author"));
+
+                    int response = JOptionPane.showConfirmDialog(this, "Do you want to Remove" + bookname + "Written By" + author + "?", "Confirm Remove", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+
+                    if (response == JOptionPane.YES_OPTION) {
+
+                        MySQL.exeUpdate("DELETE FROM `booklibrary` WHERE `ID`='" + bookId + "' ");
+                        JOptionPane.showMessageDialog(this, "Successfuly Removed !", "Success", JOptionPane.PLAIN_MESSAGE);
+                        clearFields();
+
+                    }
+
+                } else {
+                    JOptionPane.showMessageDialog(this, "Invalid Book Id or Book Doesn't Exists !", "Warning", JOptionPane.WARNING_MESSAGE);
+             
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+
+    }//GEN-LAST:event_jButton13ActionPerformed
+
+    private void jButton14ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton14ActionPerformed
+        clearFields();
+    }//GEN-LAST:event_jButton14ActionPerformed
+
+    private void jButton15ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton15ActionPerformed
+              
+        String bookid = jTextField13.getText();
+        
+        if(bookid.isEmpty()){
+            JOptionPane.showMessageDialog(this, "Enter Book ID to Add the Location !", "Warning", JOptionPane.WARNING_MESSAGE);
+            jTextField13.grabFocus();
+      
+        }else{
+            
+            try {
+                
+                ResultSet  search = MySQL.exeSearch("SELECT * FROM `booklibrary`  INNER JOIN `bookcat` ON `bookcat`.`ID` = `booklibrary`.`BookCat_ID`"
+                        + "  INNER JOIN `section` ON `section`.`ID` = `bookcat`.`Section_ID` INNER JOIN `location` ON `location`.`ID` = `section`.`Location_ID`  WHERE `booklibrary`.`ID`='"+bookid+"'");
+                
+                if(search.next()){
+                    
+                    jButton16.setEnabled(true);
+                    jButton17.setEnabled(true);
+                    jButton18.setEnabled(true);
+                    
+                    String Section = String.valueOf(search.getString("section.Section"));
+                    String location = String.valueOf(search.getString("location.Cupboard"));
+                    
+                    if(Section == null){
+                        jComboBox2.setSelectedItem("Select");
+                    }else if(location == null){
+                        jComboBox3.setSelectedItem("Select");
+                    }else{
+                        jComboBox2.setSelectedItem(Section);
+                        jComboBox3.setSelectedItem(location);
+                    }
+                    
+                    
+                }else{
+                     JOptionPane.showMessageDialog(this, "Invalid Book Id or Book Doesn't Exists !", "Warning", JOptionPane.WARNING_MESSAGE);
+                     jTextField13.grabFocus();
+                 }
+                
+                
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+                      
+        }
+        
+    }//GEN-LAST:event_jButton15ActionPerformed
+
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton10;
@@ -1293,6 +1630,7 @@ public class Dashboard extends javax.swing.JFrame {
     private javax.swing.JButton jButton25;
     private javax.swing.JButton jButton26;
     private javax.swing.JButton jButton27;
+    private javax.swing.JButton jButton28;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
