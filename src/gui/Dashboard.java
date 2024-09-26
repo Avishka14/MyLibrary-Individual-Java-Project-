@@ -2,7 +2,8 @@ package gui;
 
 import java.awt.BorderLayout;
 import javax.swing.SwingUtilities;
-import process.LibrarySection;
+import process.*;
+
 
 /**
  *
@@ -18,7 +19,15 @@ public class Dashboard extends javax.swing.JFrame {
         employeeName = empName;
         employeeNic = empNic;
         jLabel15.setText(employeeName);
+        defaultConfigure();
+       
+    }
     
+    private void defaultConfigure(){
+      jPanel4.removeAll();
+      LibrarySection libSec = new LibrarySection();
+      jPanel4.add(libSec,BorderLayout.CENTER);
+      SwingUtilities.updateComponentTreeUI(jPanel4);
     }
     
 
@@ -42,10 +51,7 @@ public class Dashboard extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Dashboard");
-        setMinimumSize(new java.awt.Dimension(999, 662));
-
-        jPanel1.setMaximumSize(new java.awt.Dimension(0, 0));
-        jPanel1.setPreferredSize(new java.awt.Dimension(0, 0));
+        setPreferredSize(new java.awt.Dimension(1200, 804));
 
         jPanel3.setBackground(new java.awt.Color(0, 51, 51));
 
@@ -64,7 +70,7 @@ public class Dashboard extends javax.swing.JFrame {
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel15)
-                .addContainerGap(601, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -139,6 +145,11 @@ public class Dashboard extends javax.swing.JFrame {
         jButton27.setForeground(new java.awt.Color(255, 255, 255));
         jButton27.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/icons8-receipt-30.png"))); // NOI18N
         jButton27.setText("Finance Section");
+        jButton27.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton27ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -183,9 +194,10 @@ public class Dashboard extends javax.swing.JFrame {
                 .addComponent(jButton25, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(6, 6, 6)
                 .addComponent(jButton26, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(290, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
+        jPanel4.setPreferredSize(new java.awt.Dimension(340, 451));
         jPanel4.setLayout(new java.awt.BorderLayout());
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -194,11 +206,12 @@ public class Dashboard extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGap(0, 0, 0)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, 912, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap())))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -209,8 +222,8 @@ public class Dashboard extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addContainerGap())))
+                        .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, 608, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 13, Short.MAX_VALUE))))
         );
 
         getContentPane().add(jPanel1, java.awt.BorderLayout.CENTER);
@@ -226,21 +239,32 @@ public class Dashboard extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton25ActionPerformed
 
     private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
-    
+        
+        jPanel4.removeAll();
+        ActivitySection acSec = new ActivitySection();
+        jPanel4.add(acSec,BorderLayout.CENTER);
+        SwingUtilities.updateComponentTreeUI(jPanel4);
         
     }//GEN-LAST:event_jButton9ActionPerformed
 
     private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
-      jPanel4.removeAll();
-      LibrarySection libSec = new LibrarySection();
-      jPanel4.add(libSec,BorderLayout.CENTER);
-      SwingUtilities.updateComponentTreeUI(jPanel4);
+     defaultConfigure();
     }//GEN-LAST:event_jButton8ActionPerformed
 
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
-      
+      jPanel4.removeAll();
+      MemberSection memSec = new MemberSection();
+      jPanel4.add(memSec,BorderLayout.CENTER);
+      SwingUtilities.updateComponentTreeUI(jPanel4);
        
     }//GEN-LAST:event_jButton7ActionPerformed
+
+    private void jButton27ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton27ActionPerformed
+       jPanel4.removeAll();
+       FinanceSection finSec = new FinanceSection();
+       jPanel4.add(finSec,BorderLayout.CENTER);
+       SwingUtilities.updateComponentTreeUI(jPanel4);
+    }//GEN-LAST:event_jButton27ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
