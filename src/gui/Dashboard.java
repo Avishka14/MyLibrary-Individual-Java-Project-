@@ -4,7 +4,6 @@ import java.awt.BorderLayout;
 import javax.swing.SwingUtilities;
 import process.*;
 
-
 /**
  *
  * @author Avishka
@@ -16,16 +15,21 @@ public class Dashboard extends javax.swing.JFrame {
 
     public Dashboard(String empName, String empNic) {
         initComponents();
-        employeeName = empName;
-        employeeNic = empNic;
+        this.employeeName = empName;
+        this.employeeNic = empNic;
         jLabel15.setText(employeeName);
         defaultConfigure();
        
     }
     
+    public String getEmployeeEmail(){
+        return employeeName;
+    }
+    
+    
     private void defaultConfigure(){
       jPanel4.removeAll();
-      LibrarySection libSec = new LibrarySection();
+      LibrarySection libSec = new LibrarySection(employeeNic);
       jPanel4.add(libSec,BorderLayout.CENTER);
       SwingUtilities.updateComponentTreeUI(jPanel4);
     }
