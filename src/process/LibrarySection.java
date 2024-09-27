@@ -1,6 +1,6 @@
 package process;
 
-import gui.Dashboard;
+
 import model.MySQL;
 import java.sql.ResultSet;
 import java.time.LocalDate;
@@ -49,6 +49,20 @@ public class LibrarySection extends javax.swing.JPanel {
             e.printStackTrace();
         }
 
+    }
+
+    private void clearFeilds() {
+        jTextField1.setText("");
+        jTextField2.setText("");
+        jTextField3.setText("");
+        jTextField5.setText("");
+        jComboBox1.setSelectedItem("Select");
+        jTextField5.setEditable(true);
+        jTextField3.setEditable(true);
+
+        jButton1.setEnabled(true);
+        jButton2.setEnabled(true);
+        jButton3.setEnabled(true);
     }
 
     @SuppressWarnings("unchecked")
@@ -161,6 +175,11 @@ public class LibrarySection extends javax.swing.JPanel {
 
         jTextField5.setFont(new java.awt.Font("Gotham", 0, 14)); // NOI18N
         jTextField5.setForeground(new java.awt.Color(255, 255, 255));
+        jTextField5.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jTextField5KeyReleased(evt);
+            }
+        });
 
         jComboBox1.setFont(new java.awt.Font("Gotham", 0, 12)); // NOI18N
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
@@ -212,6 +231,11 @@ public class LibrarySection extends javax.swing.JPanel {
         jButton5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/remove-icon.png"))); // NOI18N
         jButton5.setText("Remove");
         jButton5.setPreferredSize(new java.awt.Dimension(98, 35));
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
+            }
+        });
 
         jLabel7.setFont(new java.awt.Font("Gotham", 0, 12)); // NOI18N
         jLabel7.setForeground(new java.awt.Color(0, 153, 102));
@@ -241,6 +265,11 @@ public class LibrarySection extends javax.swing.JPanel {
         jButton9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/remove-icon.png"))); // NOI18N
 
         jButton11.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/clear-icon.png"))); // NOI18N
+        jButton11.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton11ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -566,7 +595,7 @@ public class LibrarySection extends javax.swing.JPanel {
                 MySQL.exeUpdate("INSERT INTO `booklibrary` (`ID`,`Name`,`Author`,`Date_Added`,`BookCat_ID`,`Librarian_NIC`) "
                         + "VALUES ('" + bookId + "','" + name + "','" + author + "','" + date + "','" + catid + "','" + employeeNic + "')");
 
-                JOptionPane.showMessageDialog(this, "Succesfully Registered !", "Sucess", JOptionPane.PLAIN_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Succesfully Registered ! Use clear button to Clear Fields.", date, HEIGHT);
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -581,57 +610,128 @@ public class LibrarySection extends javax.swing.JPanel {
 
         String bookid = jTextField5.getText();
 
-        if (bookid.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Enter your Book ID to Update!", "Warning", JOptionPane.ERROR_MESSAGE);
-            jTextField5.grabFocus();
+        try {
 
-        } else {
-
-            String name = jTextField1.getText();
-            String author = jTextField2.getText();
-            String date = jTextField3.getText();
-            String cat = String.valueOf(jComboBox1.getSelectedItem());
-
-            if (name.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Name is Empty !", "Warning", JOptionPane.ERROR_MESSAGE);
-                jTextField1.grabFocus();
-
-            } else if (author.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Author is Empty !", "Warning", JOptionPane.ERROR_MESSAGE);
-                jTextField2.grabFocus();
-
-            } else if (date.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Date is Empty !", "Warning", JOptionPane.ERROR_MESSAGE);
-                jTextField3.grabFocus();
-
-            } else if (bookid.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Book Id is Empty !", "Warning", JOptionPane.ERROR_MESSAGE);
+            if (bookid.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Enter your Book ID to Update!", "Warning", JOptionPane.ERROR_MESSAGE);
                 jTextField5.grabFocus();
-
-            } else if (!(bookid.length() == 6)) {
-                JOptionPane.showMessageDialog(this, "Book id Should be 6 Characters !", "Warning", JOptionPane.ERROR_MESSAGE);
-                jTextField5.grabFocus();
-
-            } else if (cat.equals("Select")) {
-                JOptionPane.showMessageDialog(this, "Select the Book Category !", "Warning", JOptionPane.ERROR_MESSAGE);
 
             } else {
+                String name = jTextField1.getText();
+                String author = jTextField2.getText();
+                String cat = String.valueOf(jComboBox1.getSelectedItem());
 
-                int catid = catMap.get(cat);
+                if (name.isEmpty()) {
+                    JOptionPane.showMessageDialog(this, "Name is Empty !", "Warning", JOptionPane.ERROR_MESSAGE);
+                    jTextField1.grabFocus();
 
-                try {
-                   
-                    JOptionPane.showMessageDialog(this, "Succesfully Updated !", "Sucess", JOptionPane.PLAIN_MESSAGE);
+                } else if (author.isEmpty()) {
+                    JOptionPane.showMessageDialog(this, "Author is Empty !", "Warning", JOptionPane.ERROR_MESSAGE);
+                    jTextField2.grabFocus();
 
-                } catch (Exception e) {
-                    e.printStackTrace();
+                } else if (cat.equals("Select")) {
+                    JOptionPane.showMessageDialog(this, "Select the Book Category !", "Warning", JOptionPane.ERROR_MESSAGE);
+
+                } else {
+
+                    int catid = catMap.get(cat);
+
+                    MySQL.exeUpdate("UPDATE `booklibrary` SET `Name`='" + name + "', `Author`='" + author + "',`BookCat_ID`='" + catid + "', "
+                            + " `Librarian_NIC`='" + employeeNic + "' WHERE `ID`='" + bookid + "' ");
+
+                    jTextField5.setEditable(true);
+                    jTextField3.setEditable(true);
+
+                    jButton1.setEnabled(true);
+                    jButton2.setEnabled(true);
+                    jButton3.setEnabled(true);
+
+                    JOptionPane.showMessageDialog(this, "Succesfully Registered ! Use clear button to Clear Fields.", "Success", JOptionPane.PLAIN_MESSAGE);
+
                 }
 
             }
 
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
     }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void jTextField5KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField5KeyReleased
+
+        String bookid = jTextField5.getText();
+
+        try {
+            ResultSet search = MySQL.exeSearch("SELECT * FROM `booklibrary` WHERE `ID` = '" + bookid + "'");
+            if (search.next()) {
+
+                jTextField1.setText(search.getString("Name"));
+                jTextField2.setText(search.getString("Author"));
+                jTextField3.setText(search.getString("Date_Added"));
+                jComboBox1.setSelectedIndex(search.getInt("BookCat_ID"));
+
+                jTextField5.setEditable(false);
+                jTextField3.setEditable(false);
+
+                jButton1.setEnabled(false);
+                jButton2.setEnabled(false);
+                jButton3.setEnabled(false);
+
+                search.close();
+
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+    }//GEN-LAST:event_jTextField5KeyReleased
+
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+        String bookid = jTextField5.getText();
+
+        if (bookid.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Enter your Book ID to Update!", "Warning", JOptionPane.ERROR_MESSAGE);
+            jTextField5.grabFocus();
+        } else {
+
+            try {
+
+                ResultSet searchBook = MySQL.exeSearch("SELECT * FROM `booklibrary` WHERE `ID` ='" + bookid + "'");
+
+                if (searchBook.next()) {
+                    String name = searchBook.getString("Name");
+                    String author = searchBook.getString("Author");
+
+                    int response = JOptionPane.showConfirmDialog(this, "Do you want to Remove" + name + "From" + author, "Warning", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+
+                    if (response == JOptionPane.YES_OPTION) {
+
+                        MySQL.exeUpdate("DELETE FROM `booklibrary` WHERE `ID`='" + bookid + "'");
+                        JOptionPane.showMessageDialog(this, "Successfully Removed" + name + "!", "Success", JOptionPane.PLAIN_MESSAGE);
+
+                    }
+
+                    searchBook.close();
+
+                } else {
+                    JOptionPane.showMessageDialog(this, "Enter your Book ID to Update!", "Warning", JOptionPane.ERROR_MESSAGE);
+                    jTextField5.grabFocus();
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+
+    }//GEN-LAST:event_jButton5ActionPerformed
+
+    private void jButton11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton11ActionPerformed
+       clearFeilds();
+    }//GEN-LAST:event_jButton11ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
