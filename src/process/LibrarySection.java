@@ -1,11 +1,11 @@
 package process;
 
-
 import model.MySQL;
 import java.sql.ResultSet;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 import java.util.Vector;
 import javax.swing.DefaultComboBoxModel;
@@ -17,12 +17,17 @@ import javax.swing.JOptionPane;
  */
 public class LibrarySection extends javax.swing.JPanel {
 
-    HashMap<String, Integer> catMap = new HashMap<>();
     private static String employeeNic;
+    HashMap<String, Integer> catMap = new HashMap<>();
+    HashMap<String, Integer> sectionMap = new HashMap<>();
+    HashMap<String, Integer> locationMap = new HashMap<>();
 
     public LibrarySection(String nic) {
         initComponents();
+        loadLocations();
+        loadSections();
         loadCategories();
+        defaultConfigure();
         this.employeeNic = nic;
     }
 
@@ -51,18 +56,75 @@ public class LibrarySection extends javax.swing.JPanel {
 
     }
 
+    private void loadSections() {
+        try {
+
+            ResultSet search = MySQL.exeSearch("SELECT * FROM `section`");
+
+            Vector<String> vector = new Vector<>();
+            vector.add("Select");
+
+            while (search.next()) {
+                vector.add(search.getString("Section"));
+                sectionMap.put(search.getString("Section"), search.getInt("ID"));
+                DefaultComboBoxModel boxModel = new DefaultComboBoxModel(vector);
+                jComboBox2.setModel(boxModel);
+            }
+
+            search.close();
+
+        } catch (Exception e) {
+        }
+    }
+
+    private void loadLocations() {
+        try {
+
+            ResultSet search = MySQL.exeSearch("SELECT * FROM `cupboard`");
+
+            Vector<String> vector = new Vector<>();
+            vector.add("Select");
+
+            while (search.next()) {
+                vector.add(search.getString("Cupboard"));
+                locationMap.put(search.getString("Cupboard"), search.getInt("ID"));
+                DefaultComboBoxModel boxModel = new DefaultComboBoxModel(vector);
+                jComboBox3.setModel(boxModel);
+            }
+
+            search.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     private void clearFeilds() {
         jTextField1.setText("");
         jTextField2.setText("");
         jTextField3.setText("");
         jTextField5.setText("");
+        jTextField4.setText("");
         jComboBox1.setSelectedItem("Select");
+        jComboBox2.setSelectedItem("Select");
+        jComboBox3.setSelectedItem("Select");
         jTextField5.setEditable(true);
         jTextField3.setEditable(true);
 
         jButton1.setEnabled(true);
         jButton2.setEnabled(true);
         jButton3.setEnabled(true);
+        jButton7.setEnabled(false);
+        jButton8.setEnabled(false);
+        jButton9.setEnabled(false);
+        
+
+    }
+
+    private void defaultConfigure() {
+        jButton7.setEnabled(false);
+        jButton8.setEnabled(false);
+        jButton9.setEnabled(false);
     }
 
     @SuppressWarnings("unchecked")
@@ -98,6 +160,7 @@ public class LibrarySection extends javax.swing.JPanel {
         jButton8 = new javax.swing.JButton();
         jButton9 = new javax.swing.JButton();
         jButton11 = new javax.swing.JButton();
+        jLabel14 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         jLabel10 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
@@ -238,31 +301,51 @@ public class LibrarySection extends javax.swing.JPanel {
         });
 
         jLabel7.setFont(new java.awt.Font("Gotham", 0, 12)); // NOI18N
-        jLabel7.setForeground(new java.awt.Color(0, 153, 102));
+        jLabel7.setForeground(new java.awt.Color(0, 204, 153));
         jLabel7.setText("Add Location");
 
         jTextField4.setFont(new java.awt.Font("Gotham", 0, 15)); // NOI18N
         jTextField4.setForeground(new java.awt.Color(255, 255, 255));
 
         jButton6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/search-icon.png"))); // NOI18N
+        jButton6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton6ActionPerformed(evt);
+            }
+        });
 
         jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         jLabel8.setFont(new java.awt.Font("Gotham", 0, 12)); // NOI18N
-        jLabel8.setForeground(new java.awt.Color(0, 153, 102));
+        jLabel8.setForeground(new java.awt.Color(0, 204, 153));
         jLabel8.setText("Add Section");
 
         jLabel9.setFont(new java.awt.Font("Gotham", 0, 12)); // NOI18N
-        jLabel9.setForeground(new java.awt.Color(0, 153, 102));
+        jLabel9.setForeground(new java.awt.Color(0, 204, 153));
         jLabel9.setText("Add Cupboard");
 
         jComboBox3.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         jButton7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/add-icon.png"))); // NOI18N
+        jButton7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton7ActionPerformed(evt);
+            }
+        });
 
         jButton8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/update-icon.png"))); // NOI18N
+        jButton8.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton8ActionPerformed(evt);
+            }
+        });
 
         jButton9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/remove-icon.png"))); // NOI18N
+        jButton9.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton9ActionPerformed(evt);
+            }
+        });
 
         jButton11.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/clear-icon.png"))); // NOI18N
         jButton11.addActionListener(new java.awt.event.ActionListener() {
@@ -270,6 +353,10 @@ public class LibrarySection extends javax.swing.JPanel {
                 jButton11ActionPerformed(evt);
             }
         });
+
+        jLabel14.setFont(new java.awt.Font("Gotham", 0, 12)); // NOI18N
+        jLabel14.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel14.setText("Enter Book ID");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -279,8 +366,27 @@ public class LibrarySection extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jLabel14)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jLabel7)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel2Layout.createSequentialGroup()
+                                        .addGap(6, 6, 6)
+                                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addComponent(jComboBox2, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addComponent(jLabel8))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel9)
+                                    .addComponent(jButton6)
+                                    .addComponent(jComboBox3, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
                                 .addGap(6, 6, 6)
                                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -301,7 +407,7 @@ public class LibrarySection extends javax.swing.JPanel {
                                         .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                            .addGroup(jPanel2Layout.createSequentialGroup()
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
                                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel2)
                                     .addComponent(jLabel3)
@@ -309,36 +415,17 @@ public class LibrarySection extends javax.swing.JPanel {
                                     .addComponent(jLabel5)
                                     .addComponent(jLabel6))
                                 .addGap(0, 0, Short.MAX_VALUE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                            .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addGap(0, 0, Short.MAX_VALUE)
-                                .addComponent(jButton11)))
-                        .addGap(27, 27, 27))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addComponent(jLabel7)
-                                .addGap(229, 229, 229))
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jButton11)
                                     .addGroup(jPanel2Layout.createSequentialGroup()
-                                        .addGap(6, 6, 6)
-                                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                            .addComponent(jComboBox2, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                            .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                    .addComponent(jLabel8))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel9)
-                                    .addComponent(jButton6)
-                                    .addComponent(jComboBox3, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                                .addGap(0, 0, Short.MAX_VALUE)
-                                .addComponent(jButton7)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton8)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton9)))
-                        .addContainerGap())))
+                                        .addComponent(jButton7)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jButton8)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jButton9)))))
+                        .addGap(27, 27, 27))))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -374,32 +461,34 @@ public class LibrarySection extends javax.swing.JPanel {
                     .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(2, 2, 2)
                 .addComponent(jButton11)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(18, 18, 18)
                 .addComponent(jLabel7)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton6))
-                .addGap(3, 3, 3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel14)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jTextField4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton6, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addGap(5, 5, 5)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel8)
                     .addComponent(jLabel9))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jComboBox3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jComboBox3, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jButton9)
                     .addComponent(jButton8)
                     .addComponent(jButton7))
-                .addContainerGap(99, Short.MAX_VALUE))
+                .addGap(59, 59, 59))
         );
 
         add(jPanel2, java.awt.BorderLayout.LINE_START);
 
         jLabel10.setFont(new java.awt.Font("Gotham", 0, 12)); // NOI18N
-        jLabel10.setForeground(new java.awt.Color(0, 153, 102));
+        jLabel10.setForeground(new java.awt.Color(0, 204, 153));
         jLabel10.setText("Find Information");
 
         jLabel11.setFont(new java.awt.Font("Gotham", 0, 12)); // NOI18N
@@ -409,6 +498,11 @@ public class LibrarySection extends javax.swing.JPanel {
         jTextField6.setForeground(new java.awt.Color(255, 255, 255));
 
         jButton10.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/search-icon.png"))); // NOI18N
+        jButton10.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton10ActionPerformed(evt);
+            }
+        });
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -445,12 +539,13 @@ public class LibrarySection extends javax.swing.JPanel {
                 return canEdit [columnIndex];
             }
         });
+        jTable2.getTableHeader().setReorderingAllowed(false);
         jScrollPane2.setViewportView(jTable2);
 
         jButton12.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/clear-icon.png"))); // NOI18N
 
         jLabel12.setFont(new java.awt.Font("Gotham", 0, 12)); // NOI18N
-        jLabel12.setForeground(new java.awt.Color(0, 153, 102));
+        jLabel12.setForeground(new java.awt.Color(0, 204, 153));
         jLabel12.setText("All Books ");
 
         jLabel13.setFont(new java.awt.Font("Gotham", 0, 12)); // NOI18N
@@ -646,7 +741,7 @@ public class LibrarySection extends javax.swing.JPanel {
                     jButton2.setEnabled(true);
                     jButton3.setEnabled(true);
 
-                    JOptionPane.showMessageDialog(this, "Succesfully Registered ! Use clear button to Clear Fields.", "Success", JOptionPane.PLAIN_MESSAGE);
+                   JOptionPane.showMessageDialog(this, "Succesfully Registered ! Use clear button to Clear Fields.", "Success", JOptionPane.PLAIN_MESSAGE);
 
                 }
 
@@ -730,8 +825,238 @@ public class LibrarySection extends javax.swing.JPanel {
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void jButton11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton11ActionPerformed
-       clearFeilds();
+        clearFeilds();
     }//GEN-LAST:event_jButton11ActionPerformed
+
+    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
+
+        String bookid = jTextField4.getText();
+
+        if (bookid.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Enter your Book ID to Update!", "Warning", JOptionPane.ERROR_MESSAGE);
+            jTextField4.grabFocus();
+        } else {
+
+            try {
+
+                ResultSet booksearch = MySQL.exeSearch("SELECT * FROM `booklibrary` WHERE `ID` = '" + bookid + "'");
+
+                if (booksearch.next()) {
+                    booksearch.close();
+
+                    ResultSet search = MySQL.exeSearch("SELECT `section`.`Section`, `cupboard`.`Cupboard` FROM `location` "
+                            + " INNER JOIN `section` ON `section`.`ID` = `location`.`Section_ID` "
+                            + " INNER JOIN `cupboard` ON `cupboard`.`ID` = `location`.`Cupboard_ID` "
+                            + " WHERE `location`.`BookLibrary_ID`='" + bookid + "' ");
+
+                    if (search.next()) {
+
+                        String sectionName = search.getString("section.Section");
+                        String locationName = search.getString("cupboard.Cupboard");
+
+                        if (!(sectionName == null)) {
+                            jComboBox2.setSelectedItem(sectionName);
+                            jButton8.setEnabled(false);
+                            jButton9.setEnabled(false);
+
+                        } 
+
+                        if (!(locationName == null)) {
+                            jComboBox3.setSelectedItem(locationName);
+                            jButton8.setEnabled(false);
+                            jButton9.setEnabled(false);
+                        }
+
+                        search.close();
+ 
+                    }else{
+                        jComboBox2.setSelectedItem("Select");
+                        jComboBox3.setSelectedItem("Select");
+                         jButton7.setEnabled(true);
+                         jButton8.setEnabled(true);
+                         jButton9.setEnabled(true);
+                        
+                    }
+
+                } else {
+                    JOptionPane.showMessageDialog(this, "Cannot find the book !", "Warning", JOptionPane.ERROR_MESSAGE);
+                    jTextField4.grabFocus();
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+
+    }//GEN-LAST:event_jButton6ActionPerformed
+
+    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
+
+        String section = String.valueOf(jComboBox2.getSelectedItem());
+        String cupboard = String.valueOf(jComboBox3.getSelectedItem());
+        String bookid = jTextField4.getText();
+
+        try {
+
+            int secID;
+            int cupKey;
+
+            if (section.equals("Select")) {
+                JOptionPane.showMessageDialog(this, "Select the Section", "Warning", JOptionPane.WARNING_MESSAGE);
+            } else {
+                if (!section.equals("Select") && !cupboard.equals("Select")) {
+                    
+                     ResultSet search = MySQL.exeSearch("SELECT `Section_ID` FROM `location` WHERE `BookLibrary_ID` ='" + bookid + "' ");
+
+                    if (search.next()) {
+                        search.close();
+                        
+                        cupKey = locationMap.get(cupboard);
+                        
+                        MySQL.exeUpdate("UPDATE `location` SET `Cupboard_ID` = '" + cupKey + "' WHERE `BookLibrary_ID`='" + bookid + "' ");
+                      
+                        JOptionPane.showMessageDialog(this, "Successfuly Added Cupboard !", "Success", JOptionPane.PLAIN_MESSAGE);
+                    } else {
+                        
+                    secID = sectionMap.get(section);
+                    cupKey = locationMap.get(cupboard);
+
+                    MySQL.exeUpdate("INSERT INTO `location` (`BookLibrary_ID`,`Section_ID`,`Cupboard_ID`) VALUES ('" + bookid + "', '" + secID + "', '" + cupKey + "' ) ");
+                     JOptionPane.showMessageDialog(this, "Successfuly Added Section and Cupboard !", "Success", JOptionPane.PLAIN_MESSAGE);
+                    
+                    }
+
+                } else if (cupboard.equals("Select") && !section.equals("Select")) {
+
+                    secID = sectionMap.get(section);
+
+                    MySQL.exeUpdate("INSERT INTO `location` (`BookLibrary_ID`,`Section_ID`) VALUES ('" + bookid + "', '" + secID + "') ");
+                    JOptionPane.showMessageDialog(this, "Successfuly Added Section !", "Success", JOptionPane.PLAIN_MESSAGE);
+
+                }
+
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }//GEN-LAST:event_jButton7ActionPerformed
+
+    private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
+       
+        String bookid = jTextField4.getText();
+        if(bookid.isEmpty()){
+             JOptionPane.showMessageDialog(this, "Enter Bookid to Remove location !", "Warning", JOptionPane.ERROR_MESSAGE);
+              jTextField4.grabFocus();
+           
+        }else{
+            
+            try {
+                
+                ResultSet search = MySQL.exeSearch("SELECT `booklibrary`.`Name` FROM `location` INNER JOIN `booklibrary` ON `booklibrary`.`ID` = `location`.`BookLibrary_ID` "
+                        + "WHERE `BookLibrary_ID` = '"+bookid+"' ");
+                
+                if(search.next()){
+                    String name  = search.getString("booklibrary.Name");
+                              
+                 int response = JOptionPane.showConfirmDialog(this, "Do you want to remove " +name +"!", "Warning", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+                 
+                 if(response == JOptionPane.YES_OPTION){
+                     
+                     MySQL.exeUpdate("DELETE FROM `location` WHERE `BookLibrary_ID` = '"+bookid+"'");
+                     JOptionPane.showMessageDialog(this, "Successfully Removed!", "Success", JOptionPane.PLAIN_MESSAGE);                    
+                 
+                 }
+                
+                    
+                }else{
+                    JOptionPane.showMessageDialog(this, "Invalid Book id or Already Removed !", "Warning", JOptionPane.ERROR_MESSAGE);
+                    jTextField4.grabFocus();
+                    search.close();
+                }
+                
+            } catch (Exception e) {
+            e.printStackTrace();
+            }
+     
+        }
+        
+    }//GEN-LAST:event_jButton9ActionPerformed
+
+    private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
+       
+        String bookid = jTextField4.getText();
+        String section = String.valueOf(jComboBox2.getSelectedItem());
+        String cupboard = String.valueOf(jComboBox3.getSelectedItem());
+        int secKey;
+        int cupKey;
+        
+        if(bookid.isEmpty()){
+             JOptionPane.showMessageDialog(this, "Enter Bookid to Update location !", "Warning", JOptionPane.ERROR_MESSAGE);
+             jTextField4.grabFocus();        
+        }else{
+            
+            try {
+                ResultSet search = MySQL.exeSearch("SELECT `ID` FROM `location` WHERE `BookLibrary_ID` = '"+bookid+"'");
+                
+                if(search.next()){
+                    int id  = search.getInt("ID");
+     
+                    if(!section.equals("Select") && !cupboard.equals("Select")){
+                        
+                        secKey = sectionMap.get(section);
+                        cupKey = locationMap.get(cupboard);                       
+                        MySQL.exeUpdate("UPDATE `location` SET `Section_ID`= '"+secKey+"', `Cupboard_ID` ='"+cupKey+"' WHERE `ID` = '"+id+"' ");
+                        JOptionPane.showMessageDialog(this, "Successfully Updated  !", "Success", JOptionPane.PLAIN_MESSAGE);
+                        search.close();               
+                  
+                    }else if (!section.equals("Select") && cupboard.equals("Select")){
+                       
+                        secKey = sectionMap.get(section);                        
+                        MySQL.exeUpdate("UPDATE `location` SET `Section_ID` ='"+secKey+"' WHERE `ID`='"+id+"' ");
+                        JOptionPane.showMessageDialog(this, "Successfully Updated Section !", "Success", JOptionPane.PLAIN_MESSAGE);
+                        search.close();               
+                  
+                    }
+                    
+                    
+                    
+                    
+                }else{
+                     JOptionPane.showMessageDialog(this, "Cannot find the book or didnt added location !", "Warning", JOptionPane.ERROR_MESSAGE);
+                     jTextField4.grabFocus();   
+                }
+      
+            } catch (Exception e) {
+            e.printStackTrace();
+            }
+      
+        }
+        
+    }//GEN-LAST:event_jButton8ActionPerformed
+
+    private void jButton10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton10ActionPerformed
+        
+        String reference  = jTextField6.getText();
+      
+        if(reference.isEmpty()){          
+             JOptionPane.showMessageDialog(this, "Enter Book id or Name to find the location !", "Warning", JOptionPane.ERROR_MESSAGE);
+              jTextField6.grabFocus();   
+
+        }else{
+            try {
+                
+                
+           
+            } catch (Exception e) {
+            e.printStackTrace();
+            }
+            
+        }
+        
+    }//GEN-LAST:event_jButton10ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -756,6 +1081,7 @@ public class LibrarySection extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
