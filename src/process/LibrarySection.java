@@ -5,11 +5,11 @@ import java.sql.ResultSet;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Random;
 import java.util.Vector;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -28,6 +28,7 @@ public class LibrarySection extends javax.swing.JPanel {
         loadSections();
         loadCategories();
         defaultConfigure();
+        loadTable();
         this.employeeNic = nic;
     }
 
@@ -117,7 +118,6 @@ public class LibrarySection extends javax.swing.JPanel {
         jButton7.setEnabled(false);
         jButton8.setEnabled(false);
         jButton9.setEnabled(false);
-        
 
     }
 
@@ -125,6 +125,50 @@ public class LibrarySection extends javax.swing.JPanel {
         jButton7.setEnabled(false);
         jButton8.setEnabled(false);
         jButton9.setEnabled(false);
+    }
+    
+    private void loadTable(){
+        
+        try {
+            
+            String sortInput = String.valueOf(jComboBox4.getSelectedItem());
+            
+            String query = "SELECT `booklibrary`.`ID`, `booklibrary`.`Name`, `booklibrary`.`Author`, `booklibrary`.`Date_Added`, `bookcat`.`CatName` "
+                    + "FROM `booklibrary` INNER JOIN `bookcat` ON `bookcat`.`ID` = `booklibrary`.`BookCat_ID`";
+            
+            if(sortInput.equals("Name ASC")){
+                query += "ORDER BY `booklibrary`.`Name` ASC";
+            
+            }else if(sortInput.equals("Name DESC")){
+                query +="ORDER BY `booklibrary`.`Name` DESC";
+        
+            }else if(sortInput.equals("Added Date (Newest First)")){
+                query +="ORDER BY `booklibrary`.`Date_Added` ASC";
+         
+            }else if(sortInput.equals("Added Date(Old First)")){
+                query +="ORDER BY `booklibrary`.`Date_Added` DESC";
+            }
+            
+            ResultSet search = MySQL.exeSearch(query);
+            
+            DefaultTableModel tableModel = (DefaultTableModel)jTable3.getModel();
+            tableModel.setRowCount(0);
+            
+            while(search.next()){
+                Vector<String> vector = new Vector<>();
+                vector.add(search.getString("booklibrary.ID"));
+                vector.add(search.getString("booklibrary.Name"));
+                vector.add(search.getString("booklibrary.Author"));
+                vector.add(search.getString("booklibrary.Date_Added"));
+                vector.add(search.getString("bookcat.CatName"));
+                tableModel.addRow(vector);
+            }
+            jTable3.setModel(tableModel);
+            
+        } catch (Exception e) {
+           e.printStackTrace();
+        }
+   
     }
 
     @SuppressWarnings("unchecked")
@@ -176,6 +220,8 @@ public class LibrarySection extends javax.swing.JPanel {
         jComboBox4 = new javax.swing.JComboBox<>();
         jScrollPane3 = new javax.swing.JScrollPane();
         jTable3 = new javax.swing.JTable();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        jTable4 = new javax.swing.JTable();
 
         setPreferredSize(new java.awt.Dimension(980, 660));
         setLayout(new java.awt.BorderLayout());
@@ -416,7 +462,7 @@ public class LibrarySection extends javax.swing.JPanel {
                                     .addComponent(jLabel6))
                                 .addGap(0, 0, Short.MAX_VALUE))
                             .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addGap(0, 0, 0)
                                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addComponent(jButton11)
                                     .addGroup(jPanel2Layout.createSequentialGroup()
@@ -461,11 +507,11 @@ public class LibrarySection extends javax.swing.JPanel {
                     .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(2, 2, 2)
                 .addComponent(jButton11)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel7)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel14)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jTextField4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton6, javax.swing.GroupLayout.Alignment.TRAILING))
@@ -482,7 +528,7 @@ public class LibrarySection extends javax.swing.JPanel {
                     .addComponent(jButton9)
                     .addComponent(jButton8)
                     .addComponent(jButton7))
-                .addGap(59, 59, 59))
+                .addContainerGap(70, Short.MAX_VALUE))
         );
 
         add(jPanel2, java.awt.BorderLayout.LINE_START);
@@ -492,7 +538,7 @@ public class LibrarySection extends javax.swing.JPanel {
         jLabel10.setText("Find Information");
 
         jLabel11.setFont(new java.awt.Font("Gotham", 0, 12)); // NOI18N
-        jLabel11.setText("Book ID or Name");
+        jLabel11.setText("Enter Book ID or Name");
 
         jTextField6.setFont(new java.awt.Font("Gotham", 0, 14)); // NOI18N
         jTextField6.setForeground(new java.awt.Color(255, 255, 255));
@@ -528,11 +574,11 @@ public class LibrarySection extends javax.swing.JPanel {
 
             },
             new String [] {
-                "Section", "Cupboard", "Availability"
+                "Section", "Cupboard"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false
+                false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -541,8 +587,16 @@ public class LibrarySection extends javax.swing.JPanel {
         });
         jTable2.getTableHeader().setReorderingAllowed(false);
         jScrollPane2.setViewportView(jTable2);
+        if (jTable2.getColumnModel().getColumnCount() > 0) {
+            jTable2.getColumnModel().getColumn(1).setHeaderValue("Cupboard");
+        }
 
         jButton12.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/clear-icon.png"))); // NOI18N
+        jButton12.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton12ActionPerformed(evt);
+            }
+        });
 
         jLabel12.setFont(new java.awt.Font("Gotham", 0, 12)); // NOI18N
         jLabel12.setForeground(new java.awt.Color(0, 204, 153));
@@ -551,18 +605,23 @@ public class LibrarySection extends javax.swing.JPanel {
         jLabel13.setFont(new java.awt.Font("Gotham", 0, 12)); // NOI18N
         jLabel13.setText("Sort By");
 
-        jComboBox4.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboBox4.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Name ASC", "Name DESC", "Added Date (Newest First)", "Added Date(Old First)" }));
+        jComboBox4.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                jComboBox4ItemStateChanged(evt);
+            }
+        });
 
         jTable3.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "Book ID", "Name", "Author", "Category", "Availability"
+                "Book ID", "Name", "Author", "Category"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false
+                false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -571,6 +630,25 @@ public class LibrarySection extends javax.swing.JPanel {
         });
         jTable3.getTableHeader().setReorderingAllowed(false);
         jScrollPane3.setViewportView(jTable3);
+
+        jTable4.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Availability"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jTable4.getTableHeader().setReorderingAllowed(false);
+        jScrollPane4.setViewportView(jTable4);
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -582,7 +660,6 @@ public class LibrarySection extends javax.swing.JPanel {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGap(22, 22, 22)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane3)
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGap(6, 6, 6)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -595,18 +672,22 @@ public class LibrarySection extends javax.swing.JPanel {
                                         .addComponent(jButton10)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(jButton12))
-                                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(jPanel3Layout.createSequentialGroup()
+                                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 299, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                 .addGap(0, 0, Short.MAX_VALUE))))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 609, Short.MAX_VALUE)
                             .addComponent(jLabel11)
                             .addGroup(jPanel3Layout.createSequentialGroup()
                                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addComponent(jLabel13)
                                     .addComponent(jLabel12))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jComboBox4, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                                .addComponent(jComboBox4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(3, 3, 3)))
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
@@ -622,9 +703,12 @@ public class LibrarySection extends javax.swing.JPanel {
                         .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jButton12))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(jLabel12)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -632,8 +716,8 @@ public class LibrarySection extends javax.swing.JPanel {
                     .addComponent(jLabel13)
                     .addComponent(jComboBox4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 291, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(29, Short.MAX_VALUE))
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 291, Short.MAX_VALUE)
+                .addGap(29, 29, 29))
         );
 
         add(jPanel3, java.awt.BorderLayout.CENTER);
@@ -689,7 +773,7 @@ public class LibrarySection extends javax.swing.JPanel {
             try {
                 MySQL.exeUpdate("INSERT INTO `booklibrary` (`ID`,`Name`,`Author`,`Date_Added`,`BookCat_ID`,`Librarian_NIC`) "
                         + "VALUES ('" + bookId + "','" + name + "','" + author + "','" + date + "','" + catid + "','" + employeeNic + "')");
-
+                   loadTable();
                 JOptionPane.showMessageDialog(this, "Succesfully Registered ! Use clear button to Clear Fields.", date, HEIGHT);
 
             } catch (Exception e) {
@@ -740,8 +824,8 @@ public class LibrarySection extends javax.swing.JPanel {
                     jButton1.setEnabled(true);
                     jButton2.setEnabled(true);
                     jButton3.setEnabled(true);
-
-                   JOptionPane.showMessageDialog(this, "Succesfully Registered ! Use clear button to Clear Fields.", "Success", JOptionPane.PLAIN_MESSAGE);
+                    loadTable();
+                    JOptionPane.showMessageDialog(this, "Succesfully Registered ! Use clear button to Clear Fields.", "Success", JOptionPane.PLAIN_MESSAGE);
 
                 }
 
@@ -805,6 +889,7 @@ public class LibrarySection extends javax.swing.JPanel {
                     if (response == JOptionPane.YES_OPTION) {
 
                         MySQL.exeUpdate("DELETE FROM `booklibrary` WHERE `ID`='" + bookid + "'");
+                        loadTable();
                         JOptionPane.showMessageDialog(this, "Successfully Removed" + name + "!", "Success", JOptionPane.PLAIN_MESSAGE);
 
                     }
@@ -859,7 +944,7 @@ public class LibrarySection extends javax.swing.JPanel {
                             jButton8.setEnabled(false);
                             jButton9.setEnabled(false);
 
-                        } 
+                        }
 
                         if (!(locationName == null)) {
                             jComboBox3.setSelectedItem(locationName);
@@ -868,14 +953,14 @@ public class LibrarySection extends javax.swing.JPanel {
                         }
 
                         search.close();
- 
-                    }else{
+
+                    } else {
                         jComboBox2.setSelectedItem("Select");
                         jComboBox3.setSelectedItem("Select");
-                         jButton7.setEnabled(true);
-                         jButton8.setEnabled(true);
-                         jButton9.setEnabled(true);
-                        
+                        jButton7.setEnabled(true);
+                        jButton8.setEnabled(true);
+                        jButton9.setEnabled(true);
+
                     }
 
                 } else {
@@ -906,25 +991,25 @@ public class LibrarySection extends javax.swing.JPanel {
                 JOptionPane.showMessageDialog(this, "Select the Section", "Warning", JOptionPane.WARNING_MESSAGE);
             } else {
                 if (!section.equals("Select") && !cupboard.equals("Select")) {
-                    
-                     ResultSet search = MySQL.exeSearch("SELECT `Section_ID` FROM `location` WHERE `BookLibrary_ID` ='" + bookid + "' ");
+
+                    ResultSet search = MySQL.exeSearch("SELECT `Section_ID` FROM `location` WHERE `BookLibrary_ID` ='" + bookid + "' ");
 
                     if (search.next()) {
                         search.close();
-                        
+
                         cupKey = locationMap.get(cupboard);
-                        
+
                         MySQL.exeUpdate("UPDATE `location` SET `Cupboard_ID` = '" + cupKey + "' WHERE `BookLibrary_ID`='" + bookid + "' ");
-                      
+
                         JOptionPane.showMessageDialog(this, "Successfuly Added Cupboard !", "Success", JOptionPane.PLAIN_MESSAGE);
                     } else {
-                        
-                    secID = sectionMap.get(section);
-                    cupKey = locationMap.get(cupboard);
 
-                    MySQL.exeUpdate("INSERT INTO `location` (`BookLibrary_ID`,`Section_ID`,`Cupboard_ID`) VALUES ('" + bookid + "', '" + secID + "', '" + cupKey + "' ) ");
-                     JOptionPane.showMessageDialog(this, "Successfuly Added Section and Cupboard !", "Success", JOptionPane.PLAIN_MESSAGE);
-                    
+                        secID = sectionMap.get(section);
+                        cupKey = locationMap.get(cupboard);
+
+                        MySQL.exeUpdate("INSERT INTO `location` (`BookLibrary_ID`,`Section_ID`,`Cupboard_ID`) VALUES ('" + bookid + "', '" + secID + "', '" + cupKey + "' ) ");
+                        JOptionPane.showMessageDialog(this, "Successfuly Added Section and Cupboard !", "Success", JOptionPane.PLAIN_MESSAGE);
+
                     }
 
                 } else if (cupboard.equals("Select") && !section.equals("Select")) {
@@ -945,118 +1030,187 @@ public class LibrarySection extends javax.swing.JPanel {
     }//GEN-LAST:event_jButton7ActionPerformed
 
     private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
-       
+
         String bookid = jTextField4.getText();
-        if(bookid.isEmpty()){
-             JOptionPane.showMessageDialog(this, "Enter Bookid to Remove location !", "Warning", JOptionPane.ERROR_MESSAGE);
-              jTextField4.grabFocus();
-           
-        }else{
-            
+        if (bookid.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Enter Bookid to Remove location !", "Warning", JOptionPane.ERROR_MESSAGE);
+            jTextField4.grabFocus();
+
+        } else {
+
             try {
-                
+
                 ResultSet search = MySQL.exeSearch("SELECT `booklibrary`.`Name` FROM `location` INNER JOIN `booklibrary` ON `booklibrary`.`ID` = `location`.`BookLibrary_ID` "
-                        + "WHERE `BookLibrary_ID` = '"+bookid+"' ");
-                
-                if(search.next()){
-                    String name  = search.getString("booklibrary.Name");
-                              
-                 int response = JOptionPane.showConfirmDialog(this, "Do you want to remove " +name +"!", "Warning", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
-                 
-                 if(response == JOptionPane.YES_OPTION){
-                     
-                     MySQL.exeUpdate("DELETE FROM `location` WHERE `BookLibrary_ID` = '"+bookid+"'");
-                     JOptionPane.showMessageDialog(this, "Successfully Removed!", "Success", JOptionPane.PLAIN_MESSAGE);                    
-                 
-                 }
-                
-                    
-                }else{
+                        + "WHERE `BookLibrary_ID` = '" + bookid + "' ");
+
+                if (search.next()) {
+                    String name = search.getString("booklibrary.Name");
+
+                    int response = JOptionPane.showConfirmDialog(this, "Do you want to remove " + name + "!", "Warning", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+
+                    if (response == JOptionPane.YES_OPTION) {
+
+                        MySQL.exeUpdate("DELETE FROM `location` WHERE `BookLibrary_ID` = '" + bookid + "'");
+                        JOptionPane.showMessageDialog(this, "Successfully Removed!", "Success", JOptionPane.PLAIN_MESSAGE);
+
+                    }
+
+                } else {
                     JOptionPane.showMessageDialog(this, "Invalid Book id or Already Removed !", "Warning", JOptionPane.ERROR_MESSAGE);
                     jTextField4.grabFocus();
                     search.close();
                 }
-                
+
             } catch (Exception e) {
-            e.printStackTrace();
+                e.printStackTrace();
             }
-     
+
         }
-        
+
     }//GEN-LAST:event_jButton9ActionPerformed
 
     private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
-       
+
         String bookid = jTextField4.getText();
         String section = String.valueOf(jComboBox2.getSelectedItem());
         String cupboard = String.valueOf(jComboBox3.getSelectedItem());
         int secKey;
         int cupKey;
-        
-        if(bookid.isEmpty()){
-             JOptionPane.showMessageDialog(this, "Enter Bookid to Update location !", "Warning", JOptionPane.ERROR_MESSAGE);
-             jTextField4.grabFocus();        
-        }else{
-            
+
+        if (bookid.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Enter Bookid to Update location !", "Warning", JOptionPane.ERROR_MESSAGE);
+            jTextField4.grabFocus();
+        } else {
+
             try {
-                ResultSet search = MySQL.exeSearch("SELECT `ID` FROM `location` WHERE `BookLibrary_ID` = '"+bookid+"'");
-                
-                if(search.next()){
-                    int id  = search.getInt("ID");
-     
-                    if(!section.equals("Select") && !cupboard.equals("Select")){
-                        
+                ResultSet search = MySQL.exeSearch("SELECT `ID` FROM `location` WHERE `BookLibrary_ID` = '" + bookid + "'");
+
+                if (search.next()) {
+                    int id = search.getInt("ID");
+
+                    if (!section.equals("Select") && !cupboard.equals("Select")) {
+
                         secKey = sectionMap.get(section);
-                        cupKey = locationMap.get(cupboard);                       
-                        MySQL.exeUpdate("UPDATE `location` SET `Section_ID`= '"+secKey+"', `Cupboard_ID` ='"+cupKey+"' WHERE `ID` = '"+id+"' ");
+                        cupKey = locationMap.get(cupboard);
+                        MySQL.exeUpdate("UPDATE `location` SET `Section_ID`= '" + secKey + "', `Cupboard_ID` ='" + cupKey + "' WHERE `ID` = '" + id + "' ");
                         JOptionPane.showMessageDialog(this, "Successfully Updated  !", "Success", JOptionPane.PLAIN_MESSAGE);
-                        search.close();               
-                  
-                    }else if (!section.equals("Select") && cupboard.equals("Select")){
-                       
-                        secKey = sectionMap.get(section);                        
-                        MySQL.exeUpdate("UPDATE `location` SET `Section_ID` ='"+secKey+"' WHERE `ID`='"+id+"' ");
+                        search.close();
+
+                    } else if (!section.equals("Select") && cupboard.equals("Select")) {
+
+                        secKey = sectionMap.get(section);
+                        MySQL.exeUpdate("UPDATE `location` SET `Section_ID` ='" + secKey + "' WHERE `ID`='" + id + "' ");
                         JOptionPane.showMessageDialog(this, "Successfully Updated Section !", "Success", JOptionPane.PLAIN_MESSAGE);
-                        search.close();               
-                  
+                        search.close();
+
                     }
-                    
-                    
-                    
-                    
-                }else{
-                     JOptionPane.showMessageDialog(this, "Cannot find the book or didnt added location !", "Warning", JOptionPane.ERROR_MESSAGE);
-                     jTextField4.grabFocus();   
+
+                } else {
+                    JOptionPane.showMessageDialog(this, "Cannot find the book or didnt added location !", "Warning", JOptionPane.ERROR_MESSAGE);
+                    jTextField4.grabFocus();
                 }
-      
+
             } catch (Exception e) {
-            e.printStackTrace();
+                e.printStackTrace();
             }
-      
+
         }
-        
+
     }//GEN-LAST:event_jButton8ActionPerformed
 
     private void jButton10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton10ActionPerformed
-        
-        String reference  = jTextField6.getText();
-      
-        if(reference.isEmpty()){          
-             JOptionPane.showMessageDialog(this, "Enter Book id or Name to find the location !", "Warning", JOptionPane.ERROR_MESSAGE);
-              jTextField6.grabFocus();   
 
-        }else{
-            try {
-                
-                
-           
-            } catch (Exception e) {
-            e.printStackTrace();
+        String bookid = jTextField6.getText();
+
+        try {
+
+            if (bookid.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Enter Book id or Name to find the location !", "Warning", JOptionPane.ERROR_MESSAGE);
+                jTextField6.grabFocus();
+
+            } else {
+
+                ResultSet check = MySQL.exeSearch("SELECT * FROM `booklibrary` WHERE `ID`='" + bookid + "'");
+                if (check.next()) {
+
+                    check.close();
+
+                    ResultSet search = MySQL.exeSearch("SELECT * FROM `booklibrary` "
+                            + "INNER JOIN `bookcat` ON `bookcat`.`ID` = `booklibrary`.`BookCat_ID` WHERE `booklibrary`.`ID`= '" + bookid + "'");
+
+                    DefaultTableModel tableModel1 = (DefaultTableModel) jTable1.getModel();
+                    tableModel1.setRowCount(0);
+
+                    while (search.next()) {
+                        Vector<String> vector = new Vector<>();
+                        vector.add(search.getString("booklibrary.Name"));
+                        vector.add(search.getString("booklibrary.Author"));
+                        vector.add(search.getString("booklibrary.Date_Added"));
+                        vector.add(search.getString("bookcat.CatName"));
+                        vector.add(search.getString("booklibrary.Librarian_NIC"));
+                        tableModel1.addRow(vector);
+
+                    }
+                    jTable1.setModel(tableModel1);
+                    
+
+                    ResultSet locationSearch = MySQL.exeSearch("SELECT `section`.`Section`, `cupboard`.`Cupboard` FROM `location`"
+                            + " INNER JOIN `section` ON `section`.`ID` = `location`.`Section_ID`"
+                            + " INNER JOIN `cupboard` ON `cupboard`.`ID` = `location`.`Cupboard_ID` "
+                            + "  WHERE `location`.`BookLibrary_ID`= '" + bookid + "' ");
+               
+                    DefaultTableModel tableModel2 = (DefaultTableModel) jTable2.getModel();
+                        tableModel2.setRowCount(0);
+
+                    while (locationSearch.next()) {
+                            Vector<String> locationVector = new Vector<>();
+                            locationVector.add(locationSearch.getString("section.Section"));
+                            locationVector.add(locationSearch.getString("cupboard.Cupboard"));
+                            tableModel2.addRow(locationVector);
+                    }
+                     jTable2.setModel(tableModel2);
+                     
+                     
+                     ResultSet returnSearch = MySQL.exeSearch("SELECT `returnstatus`.`Status` FROM `reserve` "
+                             + "INNER JOIN `returnstatus` ON `reserve`.`ReturnStatus_ID` = `returnstatus`.`ID` "
+                             + "WHERE `reserve`.`BookLibrary_ID` = '"+bookid+"'  ");
+                     
+                     DefaultTableModel tableModel3 = (DefaultTableModel) jTable4.getModel();
+                     tableModel3.setRowCount(0);
+                     
+                     while(returnSearch.next()){
+                         Vector<String> returnVector = new Vector<>();
+                         returnVector.add(returnSearch.getString("returnstatus.Status"));
+                         tableModel3.addRow(returnVector);
+                     }
+                     jTable4.setModel(tableModel3);
+                     search.close();
+                     locationSearch.close();
+                     returnSearch.close();
+
+                } else {
+                    JOptionPane.showMessageDialog(this, "Invalid Book Id !", "Warning", JOptionPane.ERROR_MESSAGE);
+                    jTextField6.grabFocus();
+                }
+
             }
-            
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        
+
     }//GEN-LAST:event_jButton10ActionPerformed
+
+    private void jButton12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton12ActionPerformed
+       jTextField6.setText("");
+       ((DefaultTableModel) jTable1.getModel()).setRowCount(0);
+       ((DefaultTableModel) jTable2.getModel()).setRowCount(0);
+       ((DefaultTableModel) jTable4.getModel()).setRowCount(0);
+    }//GEN-LAST:event_jButton12ActionPerformed
+
+    private void jComboBox4ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jComboBox4ItemStateChanged
+        loadTable();
+    }//GEN-LAST:event_jComboBox4ItemStateChanged
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -1096,9 +1250,11 @@ public class LibrarySection extends javax.swing.JPanel {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JTable jTable1;
     private javax.swing.JTable jTable2;
     private javax.swing.JTable jTable3;
+    private javax.swing.JTable jTable4;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;
