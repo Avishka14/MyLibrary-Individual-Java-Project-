@@ -126,49 +126,48 @@ public class LibrarySection extends javax.swing.JPanel {
         jButton8.setEnabled(false);
         jButton9.setEnabled(false);
     }
-    
-    private void loadTable(){
-        
+
+    private void loadTable() {
+
         try {
-            
+
             String sortInput = String.valueOf(jComboBox4.getSelectedItem());
-            
+
             String query = "SELECT `booklibrary`.`ID`, `booklibrary`.`Name`, `booklibrary`.`Author`, `booklibrary`.`Date_Added`, `bookcat`.`CatName` "
                     + "FROM `booklibrary` INNER JOIN `bookcat` ON `bookcat`.`ID` = `booklibrary`.`BookCat_ID`";
-            
-            if(sortInput.equals("Name ASC")){
+
+            if (sortInput.equals("Name ASC")) {
                 query += "ORDER BY `booklibrary`.`Name` ASC";
-            
-            }else if(sortInput.equals("Name DESC")){
-                query +="ORDER BY `booklibrary`.`Name` DESC";
-        
-            }else if(sortInput.equals("Added Date (Newest First)")){
-                query +="ORDER BY `booklibrary`.`Date_Added` ASC";
-         
-            }else if(sortInput.equals("Added Date(Old First)")){
-                query +="ORDER BY `booklibrary`.`Date_Added` DESC";
+
+            } else if (sortInput.equals("Name DESC")) {
+                query += "ORDER BY `booklibrary`.`Name` DESC";
+
+            } else if (sortInput.equals("Added Date (Newest First)")) {
+                query += "ORDER BY `booklibrary`.`Date_Added` ASC";
+
+            } else if (sortInput.equals("Added Date(Old First)")) {
+                query += "ORDER BY `booklibrary`.`Date_Added` DESC";
             }
-            
+
             ResultSet search = MySQL.exeSearch(query);
-            
-            DefaultTableModel tableModel = (DefaultTableModel)jTable3.getModel();
+
+            DefaultTableModel tableModel = (DefaultTableModel) jTable3.getModel();
             tableModel.setRowCount(0);
-            
-            while(search.next()){
+
+            while (search.next()) {
                 Vector<String> vector = new Vector<>();
                 vector.add(search.getString("booklibrary.ID"));
                 vector.add(search.getString("booklibrary.Name"));
                 vector.add(search.getString("booklibrary.Author"));
-                vector.add(search.getString("booklibrary.Date_Added"));
                 vector.add(search.getString("bookcat.CatName"));
                 tableModel.addRow(vector);
             }
             jTable3.setModel(tableModel);
-            
+
         } catch (Exception e) {
-           e.printStackTrace();
+            e.printStackTrace();
         }
-   
+
     }
 
     @SuppressWarnings("unchecked")
@@ -239,7 +238,7 @@ public class LibrarySection extends javax.swing.JPanel {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel1)
-                .addContainerGap(838, Short.MAX_VALUE))
+                .addContainerGap(847, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -461,16 +460,13 @@ public class LibrarySection extends javax.swing.JPanel {
                                     .addComponent(jLabel5)
                                     .addComponent(jLabel6))
                                 .addGap(0, 0, Short.MAX_VALUE))
+                            .addComponent(jButton11)
                             .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addGap(0, 0, 0)
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jButton11)
-                                    .addGroup(jPanel2Layout.createSequentialGroup()
-                                        .addComponent(jButton7)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jButton8)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jButton9)))))
+                                .addComponent(jButton7)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jButton8)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jButton9)))
                         .addGap(27, 27, 27))))
         );
         jPanel2Layout.setVerticalGroup(
@@ -542,6 +538,11 @@ public class LibrarySection extends javax.swing.JPanel {
 
         jTextField6.setFont(new java.awt.Font("Gotham", 0, 14)); // NOI18N
         jTextField6.setForeground(new java.awt.Color(255, 255, 255));
+        jTextField6.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jTextField6KeyReleased(evt);
+            }
+        });
 
         jButton10.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/search-icon.png"))); // NOI18N
         jButton10.addActionListener(new java.awt.event.ActionListener() {
@@ -555,11 +556,11 @@ public class LibrarySection extends javax.swing.JPanel {
 
             },
             new String [] {
-                "Name", "Author", "Added Date", "Category", "Added By"
+                "Book ID", "Name", "Author", "Added Date", "Category", "Added By"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false
+                false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -658,37 +659,36 @@ public class LibrarySection extends javax.swing.JPanel {
                 .addComponent(jLabel10)
                 .addGap(0, 0, Short.MAX_VALUE))
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(22, 22, 22)
+                .addGap(28, 28, 28)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(6, 6, 6)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 606, Short.MAX_VALUE)
                             .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(jPanel3Layout.createSequentialGroup()
-                                        .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, 219, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jButton10)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jButton12))
-                                    .addGroup(jPanel3Layout.createSequentialGroup()
-                                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 299, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addGap(0, 0, Short.MAX_VALUE))))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 609, Short.MAX_VALUE)
-                            .addComponent(jLabel11)
-                            .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jLabel13)
-                                    .addComponent(jLabel12))
+                                .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, 219, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jComboBox4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(3, 3, 3)))
-                .addContainerGap())
+                                .addComponent(jButton10)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jButton12))
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 299, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addGap(3, 3, 3)
+                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel11)
+                                    .addGroup(jPanel3Layout.createSequentialGroup()
+                                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                            .addComponent(jLabel13)
+                                            .addComponent(jLabel12))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jComboBox4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 588, Short.MAX_VALUE))))
+                        .addGap(30, 30, 30))))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -703,21 +703,20 @@ public class LibrarySection extends javax.swing.JPanel {
                         .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jButton12))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 87, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 86, Short.MAX_VALUE)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel12)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel13)
                     .addComponent(jComboBox4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 291, Short.MAX_VALUE)
-                .addGap(29, 29, 29))
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 259, Short.MAX_VALUE)
+                .addGap(21, 21, 21))
         );
 
         add(jPanel3, java.awt.BorderLayout.CENTER);
@@ -773,8 +772,8 @@ public class LibrarySection extends javax.swing.JPanel {
             try {
                 MySQL.exeUpdate("INSERT INTO `booklibrary` (`ID`,`Name`,`Author`,`Date_Added`,`BookCat_ID`,`Librarian_NIC`) "
                         + "VALUES ('" + bookId + "','" + name + "','" + author + "','" + date + "','" + catid + "','" + employeeNic + "')");
-                   loadTable();
-                JOptionPane.showMessageDialog(this, "Succesfully Registered ! Use clear button to Clear Fields.", date, HEIGHT);
+                loadTable();
+                JOptionPane.showMessageDialog(this, "Succesfully Registered ! Use clear button to Clear Fields.", "Success", JOptionPane.PLAIN_MESSAGE);
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -825,7 +824,7 @@ public class LibrarySection extends javax.swing.JPanel {
                     jButton2.setEnabled(true);
                     jButton3.setEnabled(true);
                     loadTable();
-                    JOptionPane.showMessageDialog(this, "Succesfully Registered ! Use clear button to Clear Fields.", "Success", JOptionPane.PLAIN_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "Successfully Updated Please use Clear Button to Clear Fields !", "Success", JOptionPane.PLAIN_MESSAGE);
 
                 }
 
@@ -1152,41 +1151,39 @@ public class LibrarySection extends javax.swing.JPanel {
 
                     }
                     jTable1.setModel(tableModel1);
-                    
 
                     ResultSet locationSearch = MySQL.exeSearch("SELECT `section`.`Section`, `cupboard`.`Cupboard` FROM `location`"
                             + " INNER JOIN `section` ON `section`.`ID` = `location`.`Section_ID`"
                             + " INNER JOIN `cupboard` ON `cupboard`.`ID` = `location`.`Cupboard_ID` "
                             + "  WHERE `location`.`BookLibrary_ID`= '" + bookid + "' ");
-               
+
                     DefaultTableModel tableModel2 = (DefaultTableModel) jTable2.getModel();
-                        tableModel2.setRowCount(0);
+                    tableModel2.setRowCount(0);
 
                     while (locationSearch.next()) {
-                            Vector<String> locationVector = new Vector<>();
-                            locationVector.add(locationSearch.getString("section.Section"));
-                            locationVector.add(locationSearch.getString("cupboard.Cupboard"));
-                            tableModel2.addRow(locationVector);
+                        Vector<String> locationVector = new Vector<>();
+                        locationVector.add(locationSearch.getString("section.Section"));
+                        locationVector.add(locationSearch.getString("cupboard.Cupboard"));
+                        tableModel2.addRow(locationVector);
                     }
-                     jTable2.setModel(tableModel2);
-                     
-                     
-                     ResultSet returnSearch = MySQL.exeSearch("SELECT `returnstatus`.`Status` FROM `reserve` "
-                             + "INNER JOIN `returnstatus` ON `reserve`.`ReturnStatus_ID` = `returnstatus`.`ID` "
-                             + "WHERE `reserve`.`BookLibrary_ID` = '"+bookid+"'  ");
-                     
-                     DefaultTableModel tableModel3 = (DefaultTableModel) jTable4.getModel();
-                     tableModel3.setRowCount(0);
-                     
-                     while(returnSearch.next()){
-                         Vector<String> returnVector = new Vector<>();
-                         returnVector.add(returnSearch.getString("returnstatus.Status"));
-                         tableModel3.addRow(returnVector);
-                     }
-                     jTable4.setModel(tableModel3);
-                     search.close();
-                     locationSearch.close();
-                     returnSearch.close();
+                    jTable2.setModel(tableModel2);
+
+                    ResultSet returnSearch = MySQL.exeSearch("SELECT `returnstatus`.`Status` FROM `reserve` "
+                            + "INNER JOIN `returnstatus` ON `reserve`.`ReturnStatus_ID` = `returnstatus`.`ID` "
+                            + "WHERE `reserve`.`BookLibrary_ID` = '" + bookid + "'  ");
+
+                    DefaultTableModel tableModel3 = (DefaultTableModel) jTable4.getModel();
+                    tableModel3.setRowCount(0);
+
+                    while (returnSearch.next()) {
+                        Vector<String> returnVector = new Vector<>();
+                        returnVector.add(returnSearch.getString("returnstatus.Status"));
+                        tableModel3.addRow(returnVector);
+                    }
+                    jTable4.setModel(tableModel3);
+                    search.close();
+                    locationSearch.close();
+                    returnSearch.close();
 
                 } else {
                     JOptionPane.showMessageDialog(this, "Invalid Book Id !", "Warning", JOptionPane.ERROR_MESSAGE);
@@ -1202,15 +1199,97 @@ public class LibrarySection extends javax.swing.JPanel {
     }//GEN-LAST:event_jButton10ActionPerformed
 
     private void jButton12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton12ActionPerformed
-       jTextField6.setText("");
-       ((DefaultTableModel) jTable1.getModel()).setRowCount(0);
-       ((DefaultTableModel) jTable2.getModel()).setRowCount(0);
-       ((DefaultTableModel) jTable4.getModel()).setRowCount(0);
+        jTextField6.setText("");
+        ((DefaultTableModel) jTable1.getModel()).setRowCount(0);
+        ((DefaultTableModel) jTable2.getModel()).setRowCount(0);
+        ((DefaultTableModel) jTable4.getModel()).setRowCount(0);
     }//GEN-LAST:event_jButton12ActionPerformed
 
     private void jComboBox4ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jComboBox4ItemStateChanged
         loadTable();
     }//GEN-LAST:event_jComboBox4ItemStateChanged
+
+    private void jTextField6KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField6KeyReleased
+
+        String referenece = jTextField6.getText().trim();
+  
+        try {
+            
+            ResultSet searchID = MySQL.exeSearch("SELECT `ID` FROM `booklibrary` WHERE `ID`='"+referenece+"' OR `Name` LIKE '%"+referenece+"%' ");
+            
+            if(searchID.next()){
+                  String bookid = searchID.getString("booklibrary.ID");
+                  
+                  ResultSet mainSearch = MySQL.exeSearch("SELECT * FROM `booklibrary` "
+                    + "INNER JOIN `bookcat` ON `bookcat`.`ID` = `booklibrary`.`BookCat_ID` "
+                    + "WHERE `booklibrary`.`ID`='" +bookid+ "' ");
+  
+            while(mainSearch.next()) {
+         
+                DefaultTableModel tableModel1 = (DefaultTableModel) jTable1.getModel();
+                
+                tableModel1.setRowCount(0);
+                    Vector<String> vector = new Vector<>();
+                    vector.add(mainSearch.getString("booklibrary.ID"));
+                    vector.add(mainSearch.getString("booklibrary.Name"));
+                    vector.add(mainSearch.getString("booklibrary.Author"));
+                    vector.add(mainSearch.getString("booklibrary.Date_Added"));
+                    vector.add(mainSearch.getString("bookcat.CatName"));
+                    vector.add(mainSearch.getString("booklibrary.Librarian_NIC"));
+                    tableModel1.addRow(vector);
+
+                jTable1.setModel(tableModel1);
+                
+                
+            }
+
+                ResultSet locationSearch = MySQL.exeSearch("SELECT `section`.`Section`, `cupboard`.`Cupboard` FROM `location`"
+                        + " INNER JOIN `section` ON `section`.`ID` = `location`.`Section_ID`"
+                        + " INNER JOIN `cupboard` ON `cupboard`.`ID` = `location`.`Cupboard_ID` "
+                        + "  WHERE `location`.`BookLibrary_ID`= '" + bookid + "'  ");
+           
+                    DefaultTableModel tableModel2 = (DefaultTableModel) jTable2.getModel();
+                    tableModel2.setRowCount(0);
+
+                    while (locationSearch.next()) {
+                        Vector<String> locationVector = new Vector<>();
+                        locationVector.add(locationSearch.getString("section.Section"));
+                        locationVector.add(locationSearch.getString("cupboard.Cupboard"));
+                        tableModel2.addRow(locationVector);
+                    }
+                    jTable2.setModel(tableModel2);
+                    locationSearch.close();
+
+             
+                ResultSet returnSearch = MySQL.exeSearch("SELECT `returnstatus`.`Status` FROM `reserve` "
+                        + "INNER JOIN `returnstatus` ON `reserve`.`ReturnStatus_ID` = `returnstatus`.`ID` "
+                        + "WHERE `reserve`.`BookLibrary_ID` = '" + bookid + "' ");
+
+           
+                    DefaultTableModel tableModel3 = (DefaultTableModel) jTable4.getModel();
+                    tableModel3.setRowCount(0);
+
+                    while (returnSearch.next()) {
+                        Vector<String> returnVector = new Vector<>();
+                        returnVector.add(returnSearch.getString("returnstatus.Status"));
+                        tableModel3.addRow(returnVector);
+                    }
+                    jTable4.setModel(tableModel3);
+                    returnSearch.close();
+                    searchID.close();
+          
+            }else{
+                ((DefaultTableModel) jTable1.getModel()).setRowCount(0);
+                ((DefaultTableModel) jTable2.getModel()).setRowCount(0);
+                ((DefaultTableModel) jTable4.getModel()).setRowCount(0);
+                
+                
+            }
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }//GEN-LAST:event_jTextField6KeyReleased
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
