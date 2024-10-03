@@ -1,8 +1,8 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
- */
-package process;
+
+package gui;
+
+import model.MySQL;
+import java.sql.*;
 
 /**
  *
@@ -10,18 +10,130 @@ package process;
  */
 public class ActivitySection extends javax.swing.JPanel {
 
-    /**
-     * Creates new form ActivitySection
-     */
+ 
     public ActivitySection() {
         initComponents();
+        loadLibraryData();
+        loadMemberData();
+    }
+    
+    private void loadLibraryData(){
+        
+        try {
+            
+            ResultSet librarySeach = MySQL.exeSearch("SELECT `ID` FROM `booklibrary`");
+             int totalBooks = 0;        
+             while(librarySeach.next()){ 
+               totalBooks++;              
+            }
+            String rowCountBooks = String.valueOf(totalBooks); 
+            jLabel11.setText(rowCountBooks);
+            librarySeach.close();
+            
+            ResultSet categorySearch = MySQL.exeSearch("SELECT `ID` FROM `bookcat`");
+             int totalCat = 0;
+             while(categorySearch.next()){
+                 totalCat++;
+             }
+             String rowCountCat = String.valueOf(totalCat);
+             jLabel12.setText(rowCountCat);
+             categorySearch.close();
+             
+             ResultSet sectionSearch = MySQL.exeSearch("SELECT `ID` FROM `section`");
+             int totalSection =0;
+             while(sectionSearch.next()){
+                 totalSection++;
+             }
+             String rowCount = String.valueOf(totalSection);
+             jLabel13.setText(rowCount);
+             sectionSearch.close();
+             
+             
+             ResultSet cupboardSearch = MySQL.exeSearch("SELECT `ID` FROM `cupboard`");
+             int totalCupboard =0;
+             while(cupboardSearch.next()){
+                 totalCupboard++;
+             }
+             String rowCountCupboard = String.valueOf(totalCupboard);
+             jLabel14.setText(rowCountCupboard);
+             cupboardSearch.close();
+             
+             ResultSet bookStatus = MySQL.exeSearch("SELECT `ID` FROM `reserve`");
+             int totalIssues =0;
+             while(bookStatus.next()){
+                 totalIssues++;
+             }
+             String rowCountIssues = String.valueOf(totalIssues);
+             jLabel15.setText(rowCountIssues);
+             bookStatus.close();
+             
+             ResultSet bookReturned = MySQL.exeSearch("SELECT `ID` FROM `reserve` WHERE `ReturnStatus_ID` ='1'");
+             int totalReturned =0;
+             while(bookReturned.next()){
+                 totalReturned++;
+             }
+             String rowCountReturned = String.valueOf(totalReturned);
+             jLabel16.setText(rowCountReturned);
+             bookReturned.close();
+             
+             ResultSet bookNotReturned = MySQL.exeSearch("SELECT `ID` FROM `reserve` WHERE `ReturnStatus_ID` ='2'");
+             int totalNotReturned =0;
+             while(bookNotReturned.next()){
+                 totalNotReturned++;
+             }
+             String rowCountNotReturned = String.valueOf(totalNotReturned);
+             jLabel17.setText(rowCountNotReturned);
+             bookNotReturned.close();
+             
+            
+               
+        } catch (Exception e) {
+        e.printStackTrace();
+        }   
+        
+    }
+    
+    private void loadMemberData(){
+        
+        try {
+            
+            ResultSet totalSearch = MySQL.exeSearch("SELECT `ID` FROM `member`");
+            int totalMemmbers = 0;
+            while(totalSearch.next()){
+                totalMemmbers++;
+            }
+            String rowCount = String.valueOf(totalMemmbers);
+            jLabel21.setText(rowCount);
+            totalSearch.close();
+            
+            ResultSet totalActiveSearch = MySQL.exeSearch("SELECT `ID` FROM `member` WHERE `MemberStatus_ID` ='1'");
+            int totalActive = 0;
+            while(totalActiveSearch.next()){
+                totalActive++;
+            }
+            String rowCountActive = String.valueOf(totalActive);
+            jLabel22.setText(rowCountActive);
+            totalActiveSearch.close(); 
+            
+            ResultSet totalDeActiveSearch = MySQL.exeSearch("SELECT `ID` FROM `member` WHERE `MemberStatus_ID` ='2'");
+            int totalDeActive = 0;
+            while(totalDeActiveSearch.next()){
+                totalDeActive++;
+            }
+            String rowCountDeActive = String.valueOf(totalDeActive);
+            jLabel23.setText(rowCountDeActive);
+            totalDeActiveSearch.close(); 
+            
+            
+            
+            
+        } catch (Exception e) {
+         e.printStackTrace();
+        }
+        
     }
 
-    /**
-     * This method is called from within the constructor to initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is always
-     * regenerated by the Form Editor.
-     */
+  
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -114,7 +226,7 @@ public class ActivitySection extends javax.swing.JPanel {
 
         jLabel10.setFont(new java.awt.Font("Gotham", 0, 14)); // NOI18N
         jLabel10.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel10.setText("Total Borrowed :");
+        jLabel10.setText("Total Not Returned :");
 
         jLabel11.setFont(new java.awt.Font("Gotham", 0, 16)); // NOI18N
         jLabel11.setForeground(new java.awt.Color(0, 204, 102));
