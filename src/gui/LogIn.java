@@ -1,10 +1,10 @@
-
 package gui;
 
 import com.formdev.flatlaf.themes.FlatMacDarkLaf;
 import javax.swing.JOptionPane;
 import java.sql.ResultSet;
 import model.MySQL;
+import java.util.logging.*;
 
 /**
  *
@@ -13,35 +13,53 @@ import model.MySQL;
 public class LogIn extends javax.swing.JFrame {
 
     public static String empName;
-    
-    public static String returnEmployeeName(String empName){
-        return empName ;
+
+    public static String returnEmployeeName(String empName) {
+        return empName;
     }
-    
+
     public static String empNic;
-    
-    public static String returnEmployeeEmail(String empNic){
+
+    public static String returnEmployeeEmail(String empNic) {
         return empNic;
     }
-    
-   
+
+    private final static Logger logger = Logger.getLogger(LogIn.class.getName());
+
+    private void setLogger() {
+
+        try {
+
+            Handler fileHandler = new FileHandler("LogIn.log", true);
+            fileHandler.setFormatter(new SimpleFormatter());
+            logger.addHandler(fileHandler);
+            logger.log(Level.INFO, "LogIn Logger Initialized");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.log(Level.SEVERE, "Failed to Initialize logger for LogIn");
+
+        }
+
+    }
+
     public LogIn() {
         initComponents();
         jPanel4.setVisible(false);
+        setLogger();
     }
-    
-    private void clearSelection(){
+
+    private void clearSelection() {
         jTextField1.setText("");
         jPasswordField1.setText("");
         jPasswordField2.setText("");
     }
-    
-    private void openAP(){
-               new AdminPanel().setVisible(true);
-               this.dispose(); 
+
+    private void openAP() {
+        new AdminPanel().setVisible(true);
+        this.dispose();
     }
 
-   
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -354,79 +372,79 @@ public class LogIn extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-       
+
         String softwareKey = "0000";
         String enterdKey = String.valueOf(jPasswordField1.getPassword());
-    
-        
-        if(enterdKey.isEmpty()){
-             JOptionPane.showMessageDialog(this, "Key Is Empty!", "Alert", JOptionPane.WARNING_MESSAGE);  
-        }else if(enterdKey.equals(softwareKey)){
-           openAP();
-        }else {
-           
+
+        if (enterdKey.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Key Is Empty!", "Alert", JOptionPane.WARNING_MESSAGE);
+        } else if (enterdKey.equals(softwareKey)) {
+            openAP();
+        } else {
+
             try {
-                 ResultSet resultSet = MySQL.exeSearch("SELECT * FROM `admin` WHERE `Keys`='"+enterdKey+"'");
-            
-            if(resultSet.next()){
-                resultSet.close();
-               new AdminPanel().setVisible(true);
-               this.dispose(); 
-               
-            }else{
-                JOptionPane.showMessageDialog(this, "Invalid Key!", "Alert", JOptionPane.WARNING_MESSAGE);  
-            }
-             
+                ResultSet resultSet = MySQL.exeSearch("SELECT * FROM `admin` WHERE `Keys`='" + enterdKey + "'");
+
+                if (resultSet.next()) {
+                    resultSet.close();
+                    new AdminPanel().setVisible(true);
+                    this.dispose();
+
+                } else {
+                    JOptionPane.showMessageDialog(this, "Invalid Key!", "Alert", JOptionPane.WARNING_MESSAGE);
+                }
+
             } catch (Exception e) {
-            e.printStackTrace();
+                e.printStackTrace();
+                logger.log(Level.SEVERE, "Failed to Load Admin Db");
             }
-        }         
-        
+        }
+
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-       
+
         String nic = jTextField1.getText();
         String password = String.valueOf(jPasswordField2.getPassword());
-        
-        if(nic.isEmpty()){        
-            JOptionPane.showMessageDialog(this, "NIC Is Empty!", "Alert", JOptionPane.WARNING_MESSAGE);          
-        }else if(password.isEmpty()){
-             JOptionPane.showMessageDialog(this, "Password Is Empty!", "Alert", JOptionPane.WARNING_MESSAGE); 
-        }else {
-            
+
+        if (nic.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "NIC Is Empty!", "Alert", JOptionPane.WARNING_MESSAGE);
+        } else if (password.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Password Is Empty!", "Alert", JOptionPane.WARNING_MESSAGE);
+        } else {
+
             try {
-                
+
                 boolean openView = true;
-                
-                ResultSet resultSet = MySQL.exeSearch("SELECT * FROM `librarian` WHERE `NIC`='"+nic+"' AND `Password`='"+password+"'");
-                 
-                if(!resultSet.next()){ 
+
+                ResultSet resultSet = MySQL.exeSearch("SELECT * FROM `librarian` WHERE `NIC`='" + nic + "' AND `Password`='" + password + "'");
+
+                if (!resultSet.next()) {
                     resultSet.close();
                     JOptionPane.showMessageDialog(this, "Invalid E-Mail or Password !", "Alert", JOptionPane.WARNING_MESSAGE);
                     openView = false;
                     clearSelection();
                 }
-                
-                if(openView){
-                
+
+                if (openView) {
+
                     empName = String.valueOf(resultSet.getString("Name"));
                     empNic = String.valueOf(resultSet.getString("NIC"));
-                    
-                    Dashboard db = new Dashboard(empName,empNic);
+
+                    Dashboard db = new Dashboard(empName, empNic);
                     db.setVisible(true);
-                    this.dispose();  
+                    this.dispose();
                     resultSet.close();
-                    
+
                 }
-                
-                
+
             } catch (Exception e) {
-            e.printStackTrace();
+                e.printStackTrace();
+                logger.log(Level.SEVERE, "Failed to Load Librarian Db");
             }
-                       
+
         }
-        
+
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jPasswordField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jPasswordField1ActionPerformed
@@ -434,55 +452,51 @@ public class LogIn extends javax.swing.JFrame {
     }//GEN-LAST:event_jPasswordField1ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-          jPanel5.setVisible(true);
-          jPanel4.setVisible(false);
+        jPanel5.setVisible(true);
+        jPanel4.setVisible(false);
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-          jPanel5.setVisible(false);
-          jPanel4.setVisible(true);
+        jPanel5.setVisible(false);
+        jPanel4.setVisible(true);
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        
+
         String text = jButton3.getText();
-        
-        if(text.equals("Hide")){
+
+        if (text.equals("Hide")) {
             jPasswordField2.setEchoChar('*');
             jButton3.setText("View");
-           
-        
-        }else{
-            jPasswordField2.setEchoChar((char)0);
+
+        } else {
+            jPasswordField2.setEchoChar((char) 0);
             jButton3.setText("Hide");
 
         }
-        
+
 
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
         String text = jButton6.getText();
-        
-        if(text.equals("Hide")){
+
+        if (text.equals("Hide")) {
             jPasswordField1.setEchoChar('*');
             jButton6.setText("View");
-           
-        
-        }else{
-            jPasswordField1.setEchoChar((char)0);
+
+        } else {
+            jPasswordField1.setEchoChar((char) 0);
             jButton6.setText("Hide");
 
         }
-        
+
     }//GEN-LAST:event_jButton6ActionPerformed
 
-   
     public static void main(String args[]) {
-        
+
         FlatMacDarkLaf.setup();
-        
-        
+
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new LogIn().setVisible(true);
