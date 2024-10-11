@@ -10,6 +10,7 @@ import java.util.Vector;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import java.util.logging.*;
 
 /**
  *
@@ -21,9 +22,26 @@ public class LibrarySection extends javax.swing.JPanel {
     HashMap<String, Integer> catMap = new HashMap<>();
     HashMap<String, Integer> sectionMap = new HashMap<>();
     HashMap<String, Integer> locationMap = new HashMap<>();
+    
+   private final static Logger logger  = Logger.getLogger(LibrarySection.class.getName());
+   
+   private void setLogger(){
+       
+       try {
+           Handler fileHandler = new FileHandler("LibrarySection.log", true);
+           fileHandler.setFormatter(new SimpleFormatter());
+           logger.addHandler(fileHandler);
+           logger.log(Level.INFO, "LibrarySection Initialized");
+       
+       } catch (Exception e) {
+           e.printStackTrace();
+           logger.log(Level.SEVERE, "Failed to Initialize Library Section");
+       }
+   }
 
     public LibrarySection(String nic) {
         initComponents();
+        setLogger();
         loadLocations();
         loadSections();
         loadCategories();
@@ -53,6 +71,7 @@ public class LibrarySection extends javax.swing.JPanel {
 
         } catch (Exception e) {
             e.printStackTrace();
+            logger.log(Level.SEVERE, "Failed to Load Categories Db Error");
         }
 
     }
@@ -75,6 +94,8 @@ public class LibrarySection extends javax.swing.JPanel {
             search.close();
 
         } catch (Exception e) {
+               e.printStackTrace();
+               logger.log(Level.SEVERE, "Failed to Load Sections Db Error");
         }
     }
 
@@ -97,6 +118,7 @@ public class LibrarySection extends javax.swing.JPanel {
 
         } catch (Exception e) {
             e.printStackTrace();
+               logger.log(Level.SEVERE, "Failed to Load Cupboards Db Error");
         }
     }
 
@@ -166,6 +188,7 @@ public class LibrarySection extends javax.swing.JPanel {
 
         } catch (Exception e) {
             e.printStackTrace();
+            logger.log(Level.SEVERE, "Faild to load Main Table Db Error ");
         }
 
     }
@@ -777,6 +800,7 @@ public class LibrarySection extends javax.swing.JPanel {
 
             } catch (Exception e) {
                 e.printStackTrace();
+                 logger.log(Level.SEVERE, "Faild to Insert Data to booklibrary Table Db Error ");
             }
 
         }
@@ -832,6 +856,8 @@ public class LibrarySection extends javax.swing.JPanel {
 
         } catch (Exception e) {
             e.printStackTrace();
+            logger.log(Level.SEVERE, "Faild to Update Data to booklibrary Table Db Error ");
+            
         }
 
     }//GEN-LAST:event_jButton4ActionPerformed
@@ -862,6 +888,7 @@ public class LibrarySection extends javax.swing.JPanel {
 
         } catch (Exception e) {
             e.printStackTrace();
+             logger.log(Level.SEVERE, "Faild to Load Data from booklibrary Table Db Error ");
         }
 
 
@@ -902,6 +929,7 @@ public class LibrarySection extends javax.swing.JPanel {
 
             } catch (Exception e) {
                 e.printStackTrace();
+                 logger.log(Level.SEVERE, "Faild to Delete Data from booklibrary Table Db Error ");
             }
 
         }
@@ -969,6 +997,7 @@ public class LibrarySection extends javax.swing.JPanel {
 
             } catch (Exception e) {
                 e.printStackTrace();
+                 logger.log(Level.SEVERE, "Faild to Insert Data to section or cupboard Tables Db Error ");
             }
 
         }
@@ -1024,6 +1053,7 @@ public class LibrarySection extends javax.swing.JPanel {
 
         } catch (Exception e) {
             e.printStackTrace();
+             logger.log(Level.SEVERE, "Faild to Update Data from section or cupboard Tables Db Error ");
         }
 
     }//GEN-LAST:event_jButton7ActionPerformed
@@ -1062,6 +1092,7 @@ public class LibrarySection extends javax.swing.JPanel {
 
             } catch (Exception e) {
                 e.printStackTrace();
+                 logger.log(Level.SEVERE, "Faild to Delete Data from section or cupboard Tables Db Error ");
             }
 
         }
@@ -1111,6 +1142,7 @@ public class LibrarySection extends javax.swing.JPanel {
 
             } catch (Exception e) {
                 e.printStackTrace();
+                 logger.log(Level.SEVERE, "Faild to Update Data to section or cupboard Tables Db Error - jButton 8 Action Performed");
             }
 
         }
@@ -1194,6 +1226,7 @@ public class LibrarySection extends javax.swing.JPanel {
 
         } catch (Exception e) {
             e.printStackTrace();
+             logger.log(Level.SEVERE, "Faild to load Data to Table Db Error ");
         }
 
     }//GEN-LAST:event_jButton10ActionPerformed
@@ -1288,6 +1321,7 @@ public class LibrarySection extends javax.swing.JPanel {
             
         } catch (Exception e) {
             e.printStackTrace();
+             logger.log(Level.SEVERE, "Faild to find data from booklibrary / location / returnstats Tables Db Error jTexfiled6 Key Realse");
         }
     }//GEN-LAST:event_jTextField6KeyReleased
 

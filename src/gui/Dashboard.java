@@ -11,6 +11,8 @@ public class Dashboard extends javax.swing.JFrame {
 
     public static String employeeName;
     public static String employeeNic;
+    
+    
 
     public Dashboard(String empName, String empNic) {
         initComponents();
@@ -272,7 +274,7 @@ public class Dashboard extends javax.swing.JFrame {
 
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
       jPanel4.removeAll();
-      MemberSection memSec = new MemberSection();
+      MemberSection memSec = new MemberSection(employeeNic);
       jPanel4.add(memSec,BorderLayout.CENTER);
       SwingUtilities.updateComponentTreeUI(jPanel4);
        
