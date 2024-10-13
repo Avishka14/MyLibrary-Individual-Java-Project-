@@ -13,7 +13,7 @@ public class MySQL {
     public static void createConnection() throws Exception{
         
         Class.forName("com.mysql.cj.jdbc.Driver");
-        connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/mylibrarydb","root","8794"); //username&password
+        connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/mylibrarydb","",""); //username&password
         
     }
     

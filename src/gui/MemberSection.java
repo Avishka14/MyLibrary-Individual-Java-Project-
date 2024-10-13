@@ -764,15 +764,15 @@ public class MemberSection extends javax.swing.JPanel {
                 } else {
 
                     if (jRadioButton1.isSelected()) {
-
-                        MySQL.exeUpdate("INSERT INTO `member` (`ID`,`FirstName`,`Surname`,`BirthDay`,`Contact`,`Email`,`RegDate`,`Occupation_ID`,`MemberStatus_ID`,`Librarian_NIC`)"
-                                + " VALUES('" + memberId + "','" + firstName + "','" + lastName + "','" + birthDay + "','" + contact + "','" + email + "',  '"+date+"' , '" + occupation + "','1','" + employeeNic + "') ");
-
+                        
                         float amount = Float.valueOf(jLabel12.getText());
                         String note = "Registration Fee";
 
-                        MySQL.exeUpdate("INSERT INTO `fees` (`note`,`amount`,`date`,`Member_ID`) VALUES ('" + note + "','" + amount + "', '" + date + "' ,'" + memberId + "')");
-
+                        MySQL.exeUpdate("INSERT INTO `member` (`ID`,`FirstName`,`Surname`,`BirthDay`,`Contact`,`Email`,`RegDate`,`Occupation_ID`,`MemberStatus_ID`,`Librarian_NIC`)"
+                                + " VALUES('" + memberId + "','" + firstName + "','" + lastName + "','" + birthDay + "','" + contact + "','" + email + "',  '"+date+"' , '" + occupation + "','1','" + employeeNic + "') ");
+     
+                        MySQL.exeUpdate("INSERT INTO `fines` (`Note`,`Amount`,`date`,`Librarian_NIC`,`Member_ID`) VALUES ('" + note + "','" + amount + "', '" + date + "' , '" + employeeNic + "', '" + memberId + "')");
+                       
                         JOptionPane.showMessageDialog(this, "Successfully Registered", "Success", JOptionPane.PLAIN_MESSAGE);
                         clearFields();
 
@@ -784,6 +784,7 @@ public class MemberSection extends javax.swing.JPanel {
 
             } catch (Exception e) {
                 e.printStackTrace();
+                logger.log(Level.SEVERE,"Failed to Insert New Member");
             }
 
         }
